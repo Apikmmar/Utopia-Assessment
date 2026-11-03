@@ -1,7 +1,7 @@
 import threading
 
-from sqlalchemy import TIMESTAMP, Boolean, Column, ForeignKey, Integer, MetaData, String, Table, Text, UniqueConstraint, create_engine, text
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import TIMESTAMP, Boolean, Column, ForeignKey, Integer, MetaData, SmallInteger, String, Table, Text, UniqueConstraint, create_engine, text
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.exc import IntegrityError as ConflictError, SQLAlchemyError as DatabaseError
 
 from backend.core import config
@@ -31,12 +31,54 @@ llmModelTable = Table(
     UniqueConstraint("provider", "model", name="llm_model_provider_model_key"),
 )
 
+jobTable = Table(
+    "job", meta,
+    Column("job_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("job_type", String(100), nullable=False, index=True),
+    Column("payload", JSONB, nullable=False, server_default=text("'{}'::jsonb")),
+    Column("status", String(20), nullable=False, server_default=text("'pending'")),
+    Column("attempt", Integer, nullable=False, server_default=text("0")), Column("max_attempt", Integer, nullable=False, server_default=text("3")),
+    Column("run_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("locked_by", String(100)), Column("locked_at", TIMESTAMP(timezone=True)),
+    Column("started_at", TIMESTAMP(timezone=True)), Column("finished_at", TIMESTAMP(timezone=True)),
+    Column("result", JSONB), Column("error_message", Text),
+    Column("idempotency_key", String(100), unique=True), Column("request_id", String(100)),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
 llmInvocationTable = Table(
     "llm_invocation", meta,
     Column("llm_invocation_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
     Column("llm_model_id", UUID(as_uuid=True), ForeignKey("llm_model.llm_model_id", ondelete="RESTRICT"), nullable=False, index=True),
     Column("request_id", String(100)), Column("status", String(20), nullable=False),
     Column("latency_ms", Integer), Column("error_message", Text),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
+userTable = Table(
+    "user", meta,
+    Column("user_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("name", String(100), nullable=False), Column("email", String(255), nullable=False, unique=True),
+    Column("phone", String(20)), Column("age", SmallInteger),
+    Column("role_id", UUID(as_uuid=True), ForeignKey("role.role_id", ondelete="RESTRICT"), nullable=False, index=True),
+    Column("is_active", Boolean, nullable=False, server_default=text("true")),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
+roleTable = Table(
+    "role", meta,
+    Column("role_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("role_code", String(30), nullable=False, unique=True), Column("role_name", String(50), nullable=False),
+    Column("description", Text), Column("is_active", Boolean, nullable=False, server_default=text("true")),
     Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
     Column("created_by", String(100), nullable=False, server_default=text("'System'")),
     Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
@@ -103,15 +145,18 @@ def ping():
 
 __all__ = [
     "ConflictError",
+    "userTable",
     "DatabaseError",
     "connection",
     "disposeEngine",
     "getEngine",
+    "jobTable",
     "llmInvocationTable",
     "llmModelTable",
     "meta",
     "ping",
     "psycopgUrl",
+    "roleTable",
     "settingTable",
     "tokenUsageTable",
     "transaction",
