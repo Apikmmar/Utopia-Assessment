@@ -4,9 +4,9 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
-import psycopg
+from sqlalchemy import text
 
-from backend.core.db import get_connection
+from backend.core.db import DatabaseError, connection
 from db.migration import (
     Migration,
     acquire_migration_lock,
@@ -54,11 +54,10 @@ class MigrationDatabaseTests(unittest.TestCase):
     def setUp(self) -> None:
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
-        self.connection = get_connection()
+        self.connection = connection()
         self.addCleanup(self.connection.close)
-        transaction = self.connection.transaction(force_rollback=True)
-        transaction.__enter__()
-        self.addCleanup(transaction.__exit__, None, None, None)
+        outer = self.connection.begin()
+        self.addCleanup(outer.rollback)
         acquire_migration_lock(self.connection)
         ensure_history(self.connection)
         self.baseline = get_history(self.connection)
@@ -77,8 +76,8 @@ class MigrationDatabaseTests(unittest.TestCase):
 
     # Check a temporary relation through PostgreSQL's catalog.
     def table_exists(self, name: str) -> bool:
-        result = self.connection.execute("SELECT to_regclass(%s)", (f"pg_temp.{name}",)).fetchone()
-        return result[0] is not None
+        result = self.connection.execute(text("SELECT to_regclass(:name)"), {"name": f"pg_temp.{name}"}).scalar()
+        return result is not None
 
     # Roll back execution order rather than the newest migration file on disk.
     def test_reverses_only_latest_applied_migration(self) -> None:
@@ -116,8 +115,8 @@ class MigrationDatabaseTests(unittest.TestCase):
             "CREATE TEMP TABLE migration_failed (id int); SELECT 1 / 0;",
             "DROP TABLE pg_temp.migration_failed;",
         )
-        with self.assertRaises(psycopg.errors.DivisionByZero):
-            with self.connection.transaction():
+        with self.assertRaises(DatabaseError):
+            with self.connection.begin_nested():
                 apply_pending(self.connection, self.migrations())
         self.assertFalse(self.table_exists("migration_failed"))
         self.assertFalse(self.table_exists("migration_before_failure"))
@@ -132,8 +131,8 @@ class MigrationDatabaseTests(unittest.TestCase):
         )
         apply_pending(self.connection, self.migrations())
         history = get_history(self.connection)
-        with self.assertRaises(psycopg.errors.DivisionByZero):
-            with self.connection.transaction():
+        with self.assertRaises(DatabaseError):
+            with self.connection.begin_nested():
                 rollback_latest(self.connection, self.migrations())
         self.assertTrue(self.table_exists("migration_failed_down"))
         self.assertEqual(get_history(self.connection), history)

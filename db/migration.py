@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
-import psycopg
+from sqlalchemy import Connection, text
 
-from backend.core.db import get_connection
+from backend.core.db import DatabaseError, transaction
 
 MIGRATIONS_DIRECTORY = Path(__file__).resolve().parent / "migrations"
 MIGRATION_LOCK = 2026110301
@@ -43,16 +43,24 @@ def load_migrations(directory: Path = MIGRATIONS_DIRECTORY) -> list[Migration]:
     return migrations
 
 
+# Run migration SQL verbatim, so colons and percent signs are never read as parameters.
+def run_sql(connection: Connection, sql: str) -> None:
+    connection.execution_options(no_parameters=True).exec_driver_sql(sql)
+
+
 # Serialize migration commands without waiting indefinitely for another process.
-def acquire_migration_lock(connection: psycopg.Connection) -> None:
-    result = connection.execute("SELECT pg_try_advisory_xact_lock(%s)", (MIGRATION_LOCK,)).fetchone()
-    if not result[0]:
+def acquire_migration_lock(connection: Connection) -> None:
+    locked = connection.execute(
+        text("SELECT pg_try_advisory_xact_lock(:lock)"), {"lock": MIGRATION_LOCK}
+    ).scalar()
+    if not locked:
         raise ValueError("Another migration command is running. Try again after it finishes.")
 
 
 # Keep applied migration records private from browser database roles.
-def ensure_history(connection: psycopg.Connection) -> None:
-    connection.execute(
+def ensure_history(connection: Connection) -> None:
+    run_sql(
+        connection,
         "CREATE TABLE IF NOT EXISTS public.schema_migrations ("
         "id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY, "
         "name text NOT NULL UNIQUE, "
@@ -60,21 +68,21 @@ def ensure_history(connection: psycopg.Connection) -> None:
         "applied_at timestamptz NOT NULL DEFAULT now()); "
         "ALTER TABLE public.schema_migrations ENABLE ROW LEVEL SECURITY; "
         "REVOKE ALL ON TABLE public.schema_migrations FROM anon, authenticated;",
-        prepare=False,
     )
 
 
 # Read execution order from the database rather than inferring it from local files.
-def get_history(connection: psycopg.Connection) -> list[tuple[str, str]]:
-    exists = connection.execute("SELECT to_regclass('public.schema_migrations')").fetchone()[0]
+def get_history(connection: Connection) -> list[tuple[str, str]]:
+    exists = connection.execute(text("SELECT to_regclass('public.schema_migrations')")).scalar()
     if exists is None:
         return []
-    return connection.execute("SELECT name, checksum FROM public.schema_migrations ORDER BY id").fetchall()
+    rows = connection.execute(text("SELECT name, checksum FROM public.schema_migrations ORDER BY id"))
+    return [(row[0], row[1]) for row in rows]
 
 
 # Apply pending SQL and its history records within the caller's transaction.
 def apply_pending(
-    connection: psycopg.Connection, migrations: list[Migration], *, dry_run: bool = False
+    connection: Connection, migrations: list[Migration], *, dry_run: bool = False
 ) -> list[str]:
     history = dict(get_history(connection))
     available = {migration.name: migration for migration in migrations}
@@ -85,17 +93,17 @@ def apply_pending(
     if pending and not dry_run:
         ensure_history(connection)
         for migration in pending:
-            connection.execute(migration.up, prepare=False)
+            run_sql(connection, migration.up)
             connection.execute(
-                "INSERT INTO public.schema_migrations (name, checksum) VALUES (%s, %s)",
-                (migration.name, migration.checksum),
+                text("INSERT INTO public.schema_migrations (name, checksum) VALUES (:name, :checksum)"),
+                {"name": migration.name, "checksum": migration.checksum},
             )
     return [migration.name for migration in pending]
 
 
 # Reverse only the last applied migration using its own SQL, then remove its history record.
 def rollback_latest(
-    connection: psycopg.Connection, migrations: list[Migration], *, dry_run: bool = False
+    connection: Connection, migrations: list[Migration], *, dry_run: bool = False
 ) -> list[str]:
     history = get_history(connection)
     if not history:
@@ -105,8 +113,8 @@ def rollback_latest(
     if migration is None or migration.checksum != checksum:
         raise ValueError(f"Applied migration is missing or changed: {name}.")
     if not dry_run:
-        connection.execute(migration.down, prepare=False)
-        connection.execute("DELETE FROM public.schema_migrations WHERE name = %s", (name,))
+        run_sql(connection, migration.down)
+        connection.execute(text("DELETE FROM public.schema_migrations WHERE name = :name"), {"name": name})
     return [name]
 
 
@@ -118,7 +126,7 @@ def run_command(direction: Literal["up", "down"]) -> int:
     args = parser.parse_args()
     try:
         migrations = load_migrations()
-        with get_connection() as connection:
+        with transaction() as connection:
             acquire_migration_lock(connection)
             operation = apply_pending if direction == "up" else rollback_latest
             names = operation(connection, migrations, dry_run=args.dry_run)
@@ -131,10 +139,11 @@ def run_command(direction: Literal["up", "down"]) -> int:
             for name in names:
                 print(f"{label}: {name}")
         return 0
-    except (ValueError, OSError) as error:
+    except (ValueError, OSError, RuntimeError) as error:
         print(str(error))
-    except psycopg.Error as error:
-        print(f"Migration failed ({type(error).__name__}, SQLSTATE: {error.sqlstate or 'unavailable'}).")
+    except DatabaseError as error:
+        sqlstate = getattr(getattr(error, "orig", None), "sqlstate", None)
+        print(f"Migration failed ({type(error).__name__}, SQLSTATE: {sqlstate or 'unavailable'}).")
         print("No changes committed.")
     return 1
 
