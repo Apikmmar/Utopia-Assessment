@@ -1,6 +1,7 @@
 import threading
 
-from sqlalchemy import MetaData, create_engine, text
+from sqlalchemy import TIMESTAMP, Column, Integer, MetaData, String, Table, create_engine, text
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.exc import IntegrityError as ConflictError, SQLAlchemyError as DatabaseError
 
 from backend.core import config
@@ -8,6 +9,15 @@ from backend.core import config
 meta = MetaData()
 _engine = None
 _engineLock = threading.Lock()
+
+tokenUsageTable = Table(
+    "token_usage", meta,
+    Column("usage_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("model_id", String(100), nullable=False),
+    Column("input_token", Integer, nullable=False), Column("output_token", Integer, nullable=False), Column("total_token", Integer, nullable=False),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+)
 
 # Rewrites a plain Postgres URL onto the psycopg driver SQLAlchemy is configured for.
 def psycopgUrl(url):
@@ -65,5 +75,6 @@ __all__ = [
     "meta",
     "ping",
     "psycopgUrl",
+    "tokenUsageTable",
     "transaction",
 ]

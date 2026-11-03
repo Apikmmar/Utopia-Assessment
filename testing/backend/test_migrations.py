@@ -8,10 +8,10 @@ from sqlalchemy import text
 
 from backend.core.db import DatabaseError, connection
 from db.migration import (
+    HISTORY_MIGRATION,
     Migration,
     acquire_migration_lock,
     apply_pending,
-    ensure_history,
     get_history,
     load_migrations,
     rollback_latest,
@@ -59,7 +59,9 @@ class MigrationDatabaseTests(unittest.TestCase):
         outer = self.connection.begin()
         self.addCleanup(outer.rollback)
         acquire_migration_lock(self.connection)
-        ensure_history(self.connection)
+        if not get_history(self.connection):
+            bootstrap = [item for item in load_migrations() if item.name == HISTORY_MIGRATION]
+            apply_pending(self.connection, bootstrap)
         self.baseline = get_history(self.connection)
         applied = dict(self.baseline)
         self.baseline_files = [migration for migration in load_migrations() if migration.name in applied]
@@ -151,6 +153,17 @@ class MigrationDatabaseTests(unittest.TestCase):
             with self.subTest(available=available), self.assertRaises(ValueError):
                 rollback_latest(self.connection, available)
         self.assertTrue(self.table_exists("migration_integrity"))
+
+    # The history table migration must stay applied, whatever its reverse SQL contains.
+    def test_history_migration_cannot_be_reversed(self) -> None:
+        self.connection.execute(
+            text("DELETE FROM public.schema_migrations WHERE name <> :name"), {"name": HISTORY_MIGRATION}
+        )
+        self.baseline = get_history(self.connection)
+        with self.assertRaises(ValueError):
+            rollback_latest(self.connection, self.migrations())
+        self.assertEqual(get_history(self.connection), self.baseline)
+        self.assertEqual([name for name, _ in self.baseline][:1], [HISTORY_MIGRATION])
 
     # Both preview modes must leave tables and migration history unchanged.
     def test_previews_do_not_apply_or_reverse_sql(self) -> None:

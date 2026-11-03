@@ -7,7 +7,7 @@ load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False, interp
 
 PLACEHOLDER_PREFIX = "your_"
 POSTGRES_SCHEMES = ("postgresql://", "postgres://")
-URL_PLACEHOLDERS = ("[PROJECT-REF]", "[POOLER-HOST]", "[YOUR-PASSWORD]")
+URL_PLACEHOLDERS = ("[PROJECT-REF]", "[POOLER-HOST]")
 
 DATABASE_URL = "DATABASE_URL"
 DATABASE_PASSWORD = "DATABASE_PASSWORD"

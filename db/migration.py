@@ -10,6 +10,7 @@ from backend.core.db import DatabaseError, transaction
 
 MIGRATIONS_DIRECTORY = Path(__file__).resolve().parent / "migrations"
 MIGRATION_LOCK = 2026110301
+HISTORY_MIGRATION = "0001_schema_migrations.sql"
 
 
 @dataclass(frozen=True)
@@ -57,20 +58,6 @@ def acquire_migration_lock(connection: Connection) -> None:
         raise ValueError("Another migration command is running. Try again after it finishes.")
 
 
-# Keep applied migration records private from browser database roles.
-def ensure_history(connection: Connection) -> None:
-    run_sql(
-        connection,
-        "CREATE TABLE IF NOT EXISTS public.schema_migrations ("
-        "id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY, "
-        "name text NOT NULL UNIQUE, "
-        "checksum text NOT NULL, "
-        "applied_at timestamptz NOT NULL DEFAULT now()); "
-        "ALTER TABLE public.schema_migrations ENABLE ROW LEVEL SECURITY; "
-        "REVOKE ALL ON TABLE public.schema_migrations FROM anon, authenticated;",
-    )
-
-
 # Read execution order from the database rather than inferring it from local files.
 def get_history(connection: Connection) -> list[tuple[str, str]]:
     exists = connection.execute(text("SELECT to_regclass('public.schema_migrations')")).scalar()
@@ -91,7 +78,6 @@ def apply_pending(
             raise ValueError(f"Applied migration is missing or changed: {name}.")
     pending = [migration for migration in migrations if migration.name not in history]
     if pending and not dry_run:
-        ensure_history(connection)
         for migration in pending:
             run_sql(connection, migration.up)
             connection.execute(
@@ -109,6 +95,8 @@ def rollback_latest(
     if not history:
         return []
     name, checksum = history[-1]
+    if name == HISTORY_MIGRATION:
+        raise ValueError(f"{name} creates the migration history table and cannot be rolled back.")
     migration = next((item for item in migrations if item.name == name), None)
     if migration is None or migration.checksum != checksum:
         raise ValueError(f"Applied migration is missing or changed: {name}.")

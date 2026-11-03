@@ -12,6 +12,7 @@ Read the relevant local skill before planning, implementing, refactoring, or rev
 
 - [Frontend](.skills/frontend/SKILL.md): application interfaces, components, styling, client state, accessibility, and frontend performance.
 - [Backend](.skills/backend/SKILL.md): services, business rules, persistence, storage, authorization, and external integrations.
+- [Database](.skills/db/SKILL.md): schema design, versioned SQL migrations in `db/`, table definitions, and connection and transaction code. Apply it alongside Backend for persistence work.
 - [Testing](.skills/testing/SKILL.md): test planning, behavior and regression coverage, integration and end-to-end checks, and failure diagnosis. Apply it when a change needs tests or verification, alongside the relevant implementation skill.
 - For changes spanning both layers, read both skills and keep their contracts aligned.
 
