@@ -53,3 +53,7 @@ These are reusable role definitions in the documented custom-agent TOML format. 
 - Location: `.skills/caveman/SKILL.md`
 - Source: https://github.com/JuliusBrussee/caveman/tree/main/plugins/caveman/skills/caveman
 - Scope: project-local instructions; this does not register a global skill or install the Caveman proxy, hooks, or other voice modes.
+
+## Multi-tool sync (Codex and Claude Code)
+
+`AGENTS.md`, `.skills/`, and `.reviewers/` are the single source of truth. Never edit `.claude/skills/<name>/` (local skills) or `.claude/agents/` by hand: run `node script/sync-claude.mjs` after changing any source to regenerate them. `CLAUDE.md` imports `AGENTS.md`. The `supabase-server` skill is third-party, installed under `.agents/skills/` and tracked by `skills-lock.json`.
