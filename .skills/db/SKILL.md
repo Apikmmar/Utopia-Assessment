@@ -19,6 +19,8 @@ Keep schema changes versioned, reversible, and reviewable. Apply the shared stan
 
 ## Table design
 
+- Always create tables with `CREATE TABLE IF NOT EXISTS` and drop them with `DROP TABLE IF EXISTS`, so a migration is safe to re-run. Do not use plain `CREATE TABLE` in any migration. Follow the same rule for indexes (`CREATE INDEX IF NOT EXISTS`) where the engine supports it.
+
 - Use `snake_case` singular table names and `snake_case` columns. Name the primary key `<table>_id`. Use `uuid` keys with `DEFAULT gen_random_uuid()` unless an existing natural key is required.
 - Use `timestamptz` for time, `varchar(n)` for bounded text, `text` for unbounded text, `jsonb` for structured payloads, and explicit lengths on identifiers.
 - Give audit columns `created_at timestamptz NOT NULL DEFAULT now()` and `created_by varchar(100) NOT NULL DEFAULT 'System'`. Add `updated_at` and `updated_by` for mutable rows.

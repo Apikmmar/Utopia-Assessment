@@ -1,6 +1,6 @@
 import threading
 
-from sqlalchemy import TIMESTAMP, Column, Integer, MetaData, String, Table, create_engine, text
+from sqlalchemy import TIMESTAMP, Boolean, Column, ForeignKey, Integer, MetaData, String, Table, Text, UniqueConstraint, create_engine, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.exc import IntegrityError as ConflictError, SQLAlchemyError as DatabaseError
 
@@ -17,6 +17,41 @@ tokenUsageTable = Table(
     Column("input_token", Integer, nullable=False), Column("output_token", Integer, nullable=False), Column("total_token", Integer, nullable=False),
     Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
     Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
+llmModelTable = Table(
+    "llm_model", meta,
+    Column("llm_model_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("provider", String(50), nullable=False), Column("model", String(100), nullable=False),
+    Column("is_active", Boolean, nullable=False, server_default=text("true")),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
+    UniqueConstraint("provider", "model", name="llm_model_provider_model_key"),
+)
+
+llmInvocationTable = Table(
+    "llm_invocation", meta,
+    Column("llm_invocation_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("llm_model_id", UUID(as_uuid=True), ForeignKey("llm_model.llm_model_id", ondelete="RESTRICT"), nullable=False, index=True),
+    Column("request_id", String(100)), Column("status", String(20), nullable=False),
+    Column("latency_ms", Integer), Column("error_message", Text),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
+settingTable = Table(
+    "setting", meta,
+    Column("setting_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("setting_key", String(100), nullable=False, unique=True), Column("setting_value", Text, nullable=False),
+    Column("value_type", String(20), nullable=False, server_default=text("'string'")), Column("description", Text),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
 )
 
 # Rewrites a plain Postgres URL onto the psycopg driver SQLAlchemy is configured for.
@@ -72,9 +107,12 @@ __all__ = [
     "connection",
     "disposeEngine",
     "getEngine",
+    "llmInvocationTable",
+    "llmModelTable",
     "meta",
     "ping",
     "psycopgUrl",
+    "settingTable",
     "tokenUsageTable",
     "transaction",
 ]

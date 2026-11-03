@@ -1,5 +1,5 @@
 -- migrate:up
-CREATE TABLE public.token_usage (
+CREATE TABLE IF NOT EXISTS public.token_usage (
     usage_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     model_id varchar(100) NOT NULL,
     input_token integer NOT NULL CHECK (input_token >= 0),
@@ -16,4 +16,4 @@ ALTER TABLE public.token_usage ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON TABLE public.token_usage FROM anon, authenticated;
 
 -- migrate:down
-DROP TABLE public.token_usage;
+DROP TABLE IF EXISTS public.token_usage;
