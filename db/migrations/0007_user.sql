@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS public."user" (
     phone varchar(20),
     age smallint CHECK (age BETWEEN 16 AND 100),
     role_id uuid NOT NULL REFERENCES public.role (role_id) ON DELETE RESTRICT,
-    is_active boolean NOT NULL DEFAULT true,
+    last_login_at timestamptz,
     created_at timestamptz NOT NULL DEFAULT now(),
     created_by varchar(100) NOT NULL DEFAULT 'System',
     updated_at timestamptz NOT NULL DEFAULT now(),

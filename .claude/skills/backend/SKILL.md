@@ -22,6 +22,18 @@ For non-trivial API engineering, follow the available `postman:api-engineer` ski
 - Centralize repeated business rules and policy decisions. Do not build generic CRUD frameworks or universal repositories to remove superficial repetition. Permit direct, simple implementations until a genuine shared concept emerges.
 - Expose intentional module entry points. Avoid circular imports and reaching into another feature's private persistence code.
 
+## House structure
+
+When the project follows the house layout (see `zdocumentation/backend-architecture.md`), keep to it rather than inventing a new one:
+
+- `api/main.py` only composes: app factory, middleware, CORS, error handlers, feature routers, and the deny-by-default route check.
+- `core/` holds shared infrastructure and cross-feature policy: config, db, logger, request context, middleware, errors, request/response model bases, auth dependencies, crypto, tokens, pagination, and queries several modules share under `core/repository/`. Nothing feature-specific, and `core` never imports `modules`.
+- Each feature is one flat module: `router.py`, `service.py`, `repository.py`, `constants.py` only when needed, and `schemas/request.py` plus `schemas/response.py`. Singular module names (`modules/user`); URLs may be plural.
+- Routers parse, resolve identity, call one service function, and translate errors. Services hold the rules, own the transaction, and return results or a `ServiceError`; they never import FastAPI or raise HTTP errors. Repositories take an optional connection and run queries only.
+- Error codes are UPPER_SNAKE and get their status from one `STATUS_BY_CODE` map. Every error body is `{detail, code}` plus `fields` for validation and `correlationId` for unexpected errors. Add the code to the map before using it.
+- JSON fields and query parameters are camelCase through the shared model bases; Python identifiers are camelCase; every module ends with `__all__`.
+- A module uses another module only through its service. Shared rules (email normalization, password policy, role codes, session revocation) live once in `core/`, and scripts reuse them instead of copying them.
+
 ## Code comments
 
 - Add one concise comment directly above each function or method, above its decorator or annotation block when present. Use language-appropriate line comments and limit the entire comment block to two physical lines.

@@ -1,10 +1,12 @@
-from db.migration import run_command
+from db.migration import runCommand
 
 
-# Reverse the most recently applied migration using the same migration file.
+# Reverses the most recently applied migration using the same migration file.
 def main() -> int:
-    return run_command("down")
+    return runCommand("down")
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+__all__ = ["main"]

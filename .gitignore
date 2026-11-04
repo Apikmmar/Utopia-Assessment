@@ -1,25 +1,44 @@
+# Secrets and local environment
 .env
-.venv
-zdocumentation/*
-
 .env.*
 !.env.example
 !.env.sample
 !.env.template
-node_modules/
-/tmp/
+.venv/
+venv/
 
+# Local notes and docs kept out of the repository
+zdocumentation/*
+.docs/*
+
+# Local tool settings
+.claude/settings.local.json
+
+# Python
 __pycache__/
 *.py[cod]
+*.egg-info/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
 .coverage
 .coverage.*
 htmlcov/
+
+# Node and frontend build output
+node_modules/
+dist/
+coverage/
+.vite/
+playwright-report/
+test-results/
+blob-report/
+.vercel/
+
+# Scratch and logs
+/tmp/
 *.log
 
+# OS files
 .DS_Store
 Thumbs.db
-
-.docs/*

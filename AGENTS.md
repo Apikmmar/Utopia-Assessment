@@ -46,6 +46,7 @@ These are reusable role definitions in the documented custom-agent TOML format. 
 - Make speed, security, and scalability reviewable through relevant measurements, enforced boundaries, bounded workloads, and tests. Do not claim these properties from folder structure or framework choice alone.
 - Use clear names, explicit types at boundaries, centralized configuration, maintained dependencies, and the existing formatter, linter, and lockfile conventions. Never commit secrets.
 - Test important behavior and failure paths at the appropriate layer. Run relevant existing checks, update setup or contract documentation when behavior changes, and report remaining limitations honestly.
+- Follow the house layout recorded in `zdocumentation/backend-architecture.md` and `zdocumentation/frontend-architecture.md` (cargo4u style: flat feature modules over shared `core/`, camelCase API, `{detail, code}` errors, `tests/{unit,integration,db}`). Change those documents first when the layout itself must change.
 - Keep refactoring scoped to the requested change. Document material tradeoffs and assumptions, and avoid speculative features or unrelated infrastructure changes.
 
 ## Caveman skill

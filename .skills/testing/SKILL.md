@@ -16,6 +16,14 @@ Build confidence through observable behavior, reproducible failures, and focused
 - For a bug fix, reproduce the failure and add a focused regression test when practical. Observe it fail for the original defect before verifying the fix; a setup or import failure does not prove reproduction.
 - Add tests for meaningful behavior changes and high-risk logic. Reuse existing checks for low-impact changes; avoid tests that merely repeat source code, inspect wording or file structure, or test framework internals.
 
+## House test layout
+
+When the project follows the house layout:
+
+- Backend tests live in root `tests/` with `pytest.ini` (`pythonpath = backend .`, `testpaths = tests`). Folders set the marker: `tests/unit/<area>` (no database), `tests/integration/api` (app and services), `tests/db` (migrations and tooling). Shared helpers go in `tests/support.py` and fixtures in `tests/conftest.py`.
+- Database tests run only with the documented flag (`RUN_DB_TESTS=1`) and each gets a throwaway schema with the migrations applied, dropped afterwards. Never write to the shared `public` schema, and never rely on rolling back a transaction on a shared database to isolate tests.
+- Frontend unit and component tests sit next to the code (`*.test.ts(x)`), render real routes against a stubbed fetch at the API client boundary, and share setup from `src/test-support/`. Browser journeys live in `frontend/e2e/`; label mocked-backend journeys as such.
+
 ## Write maintainable tests
 
 - Use descriptive names stating the behavior and expected outcome. Keep Arrange, Act, and Assert easy to identify through structure, with one coherent behavior per test. Multiple assertions are appropriate when they prove that behavior.

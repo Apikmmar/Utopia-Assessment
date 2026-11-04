@@ -20,6 +20,16 @@ Read the current requirements, applicable documentation, and existing implementa
 - Keep server data, form drafts, and transient UI state distinct. Derive values instead of storing redundant copies. Keep state near its consumers and lift it only when sharing is required.
 - Treat backend responses as untrusted input at runtime boundaries. Keep transport shapes distinct from view models where their needs differ; prefer generated contract types when the project supports them.
 
+## House structure
+
+When the project follows the house layout (see `zdocumentation/frontend-architecture.md`), keep to it:
+
+- Feature folders under `src/features/<feature>/` with `api.ts` (one function per endpoint), `queries.ts` (TanStack hooks and a key factory: `all`, `lists`, `list(filters)`, `details`, `detail(id)`), `schemas.ts` (Zod for forms and responses), `components/`, `hooks/`, and `pages/`. Shared primitives live in `src/components/ui`, transport in `src/lib`. Features do not import each other's internals.
+- kebab-case file names and named exports only.
+- One typed API client: relative `/api` base, `credentials: "include"`, Zod-parsed responses, and an `ApiError` with `status`, `code`, `message`, `fields`, and `correlationId` matching the backend error body. Branch on `code`, never on message text.
+- Server state through TanStack Query: retry only network errors and 502/503 with a small bound, never retry 4xx or mutations, moderate `staleTime`, and clear the cache when the user changes.
+- Forms with React Hook Form and Zod mirror server rules for feedback only and map server `fields` back with `setError`. Keep list filters in the URL. Registries such as role codes are `as const` with a label map and an unknown fallback.
+
 ## Code comments
 
 - Add one concise comment directly above each function or method, including function components and custom hooks where applicable. Use language-appropriate comments and limit the entire comment block to two physical lines, including any comment delimiters.

@@ -22,3 +22,5 @@ Label measured results separately from confirmed structural risks and hypotheses
 Suggest the smallest useful fix and its verification. Do not automatically recommend caching, memoization, queues, microservices, or more hardware. Preserve correctness and authorization when proposing faster paths.
 
 Use existing permitted focused checks where useful. Do not start load tests, billable workloads, or production traffic without explicit authorization. Return findings using the shared protocol; leave implementation and architectural redesign to the primary agent.
+
+When the project uses the house layout, also check: no pooled database connection is held while hashing passwords or calling slow providers; CPU-bound routes are sync functions that run in the thread pool; repository queries are bounded and paginated with the shared pagination helper; per-request writes such as session touches are throttled; frontend queries follow the shared retry and staleTime policy and list filters do not refetch on every keystroke.

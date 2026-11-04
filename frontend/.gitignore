@@ -1,0 +1,10 @@
+node_modules
+dist
+playwright-report
+test-results
+blob-report
+.vercel
+*.local
+.env
+.env.*
+!.env.example

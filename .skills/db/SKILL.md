@@ -32,13 +32,16 @@ Keep schema changes versioned, reversible, and reviewable. Apply the shared stan
 
 - `backend/core/config.py` reads settings; `backend/core/db.py` owns one lazily built, thread-safe SQLAlchemy engine with a bounded pool, encrypted connections, and connect, statement, and lock timeouts. Do not open connections elsewhere.
 - Define each table once in `backend/core/db.py` as a SQLAlchemy `Table` on the shared `meta`, named `<camelCase>Table`, matching its migration column for column. A migration and its `Table` change together.
-- Use `transaction()` for writes, which commits on success and rolls back on error, and `connection()` for reads. The use case owns the transaction; repositories do not commit on their own.
+- Use `transaction()` for writes, which commits on success and rolls back on error, and `connection()` for reads. Repository functions take an optional `conn` and use `runRead`, `runWrite`, or `runUniqueWrite` (which turns a unique-constraint violation into a conflict inside a savepoint). The use case owns the transaction; repositories do not commit on their own.
+- Application queries never hardcode the `public.` schema, so they follow `search_path`. Only migration SQL names `public.` explicitly.
 - Bind every value as a parameter. Never build SQL by formatting strings. Run raw migration SQL only through the migration runner, which disables parameter parsing for it.
 - Catch `DatabaseError` and `ConflictError` from `backend/core/db.py` rather than driver exceptions. Do not print URLs, passwords, or raw driver errors.
 - Credentials come from `backend/.env` through config: `DATABASE_URL` for the Session pooler URI and `DATABASE_PASSWORD` for the password, which is passed separately so special characters survive. Never commit or print either.
 
+- Python code imports the database layer as `core.db` with `backend` on the import path; `db/` tooling must load it under that one name so a process never holds two engines.
+
 ## Verify
 
-- Unit-test migration parsing and rules without a database. Run engine-specific behavior, such as transactions, locking, and constraints, against real PostgreSQL inside a rolled-back transaction with temporary tables, enabled by `RUN_MIGRATION_INTEGRATION_TESTS=1`.
+- Unit-test migration parsing and rules without a database (`tests/unit`). Run engine-specific behavior, such as transactions, locking, and constraints, against real PostgreSQL in a throwaway `utopia_test_<id>` schema per test, with the migrations applied into it and dropped afterwards (`tests/conftest.py`), enabled by `RUN_DB_TESTS=1`. Never test against `public`.
 - When adding a migration, confirm that down reverses up, that a second `python -m db.migration` is a no-op, and that the matching `Table` columns agree with the SQL.
 - Follow the comment rule from the testing skill: one concise comment above each function, at most two lines, with no inline comments or docstrings. SQL files may carry a short comment after a marker when a down section is intentionally a no-op.

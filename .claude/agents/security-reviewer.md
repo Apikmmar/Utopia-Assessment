@@ -23,3 +23,5 @@ Review these areas when present:
 For each finding identify the actor, prerequisites, reachable path, violated boundary, and impact. Distinguish a demonstrated bypass from an unverified concern. Do not demand a particular authentication provider, stack, or unrelated security feature.
 
 Use safe static reasoning or already authorized isolated checks. Never print raw secret values. Return findings and focused verification steps using the shared protocol; do not patch the code or run an active attack against a live service.
+
+When the project uses the house layout, also verify: every route is covered by the deny-by-default route check or the explicit public allow list; role checks go through core/auth requireRole and are re-read from the database per request; state-changing requests pass the Origin check and the session cookie keeps HttpOnly, Secure, and SameSite; error bodies expose only detail, code, fields, and correlationId and never stack traces, SQL, or secrets; log redaction covers passwords, tokens, and hashes; database tests use a throwaway schema and never the shared public schema.
