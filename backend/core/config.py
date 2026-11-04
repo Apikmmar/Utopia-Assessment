@@ -19,7 +19,15 @@ APP_ALLOWED_ORIGIN = "APP_ALLOWED_ORIGIN"
 AUTH_ARGON2_MEMORY_KIB = "AUTH_ARGON2_MEMORY_KIB"
 AUTH_ARGON2_ITERATIONS = "AUTH_ARGON2_ITERATIONS"
 
+SUPABASE_URL = "SUPABASE_URL"
+SUPABASE_SERVICE_ROLE_KEY = "SUPABASE_SERVICE_ROLE_KEY"
+STORAGE_BUCKET = "STORAGE_BUCKET"
+STORAGE_VIEW_URL_SECONDS = "STORAGE_VIEW_URL_SECONDS"
+WORKER_POLL_SECONDS = "WORKER_POLL_SECONDS"
+WORKER_EMBEDDED = "WORKER_EMBEDDED"
+
 REQUIRED_APP_SETTINGS = (DATABASE_URL, DATABASE_PASSWORD)
+DEFAULT_STORAGE_BUCKET = "order-files"
 DEFAULT_ALLOWED_ORIGIN = "http://localhost:5173"
 
 TRUE_VALUES = ("1", "true", "yes", "on")
@@ -110,6 +118,31 @@ def authArgon2MemoryKib():
 def authArgon2Iterations():
     return positiveIntSetting(AUTH_ARGON2_ITERATIONS, 2)
 
+# Returns the Supabase project URL without a trailing slash, or None when storage is not configured.
+def supabaseUrl():
+    url = setting(SUPABASE_URL)
+    return url.rstrip("/") if url else None
+
+# Returns the server-only Supabase service role key, or None when storage is not configured.
+def supabaseServiceRoleKey():
+    return setting(SUPABASE_SERVICE_ROLE_KEY)
+
+# Returns the private bucket that holds order files.
+def storageBucket():
+    return setting(STORAGE_BUCKET, DEFAULT_STORAGE_BUCKET)
+
+# Returns how many seconds a signed view link stays valid.
+def storageViewUrlSeconds():
+    return positiveIntSetting(STORAGE_VIEW_URL_SECONDS, 300)
+
+# Returns how many seconds the worker sleeps when no job is due.
+def workerPollSeconds():
+    return positiveIntSetting(WORKER_POLL_SECONDS, 2)
+
+# Returns whether the API process also runs the worker loop in a background thread.
+def workerEmbedded():
+    return boolSetting(WORKER_EMBEDDED, False)
+
 # Raises one error naming every missing required setting so startup reports them together.
 def requireStartupSettings():
     missing = missingSettings(REQUIRED_APP_SETTINGS)
@@ -133,4 +166,10 @@ __all__ = [
     "requireStartupSettings",
     "requiredSetting",
     "setting",
+    "storageBucket",
+    "storageViewUrlSeconds",
+    "supabaseServiceRoleKey",
+    "supabaseUrl",
+    "workerEmbedded",
+    "workerPollSeconds",
 ]

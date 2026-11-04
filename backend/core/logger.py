@@ -3,10 +3,13 @@ import re
 import traceback
 from core.request_context import currentRequestId
 
-REDACTED_FIELDS = ("new_password", "newPassword", "password_hash", "passwordHash", "password", "token")
+REDACTED_FIELDS = (
+    "new_password", "newPassword", "password_hash", "passwordHash", "password", "token",
+    "service_role_key", "serviceRoleKey", "upload_url", "uploadUrl", "view_url", "viewUrl", "deep_link", "deepLink", "message",
+)
 REDACTED_VALUE = "[redacted]"
 SECRET_PATTERN = re.compile(
-    r"""(["']?(?:new_password|newPassword|password_hash|passwordHash|password|token)["']?\s*[=:]\s*)("[^"]*"|'[^']*'|[^\s,}]+)""",
+    r"""(["']?(?:new_password|newPassword|password_hash|passwordHash|password|token|service_role_key|serviceRoleKey|upload_url|uploadUrl|view_url|viewUrl|deep_link|deepLink|message)["']?\s*[=:]\s*)("[^"]*"|'[^']*'|[^\s,}]+)""",
     re.IGNORECASE,
 )
 LOG_FORMAT = "%(asctime)s %(levelname)s [%(request_id)s] %(name)s: %(message)s"

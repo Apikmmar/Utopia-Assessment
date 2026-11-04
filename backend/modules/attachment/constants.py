@@ -1,0 +1,35 @@
+MEGABYTE = 1024 * 1024
+
+KIND_COMPLETION = "completion"
+KIND_RECEIPT = "receipt"
+
+IMAGE_TYPES = ("image/jpeg", "image/png", "image/webp", "image/heic")
+VIDEO_TYPES = ("video/mp4", "video/quicktime")
+DOCUMENT_TYPES = ("application/pdf",)
+
+IMAGE_MAX_BYTES = 10 * MEGABYTE
+VIDEO_MAX_BYTES = 49 * MEGABYTE
+
+MAX_BYTES_BY_TYPE = {
+    **{contentType: IMAGE_MAX_BYTES for contentType in IMAGE_TYPES + DOCUMENT_TYPES},
+    **{contentType: VIDEO_MAX_BYTES for contentType in VIDEO_TYPES},
+}
+ATTACHMENT_LIMITS = {
+    KIND_COMPLETION: {"maxCount": 6, "types": IMAGE_TYPES + VIDEO_TYPES + DOCUMENT_TYPES},
+    KIND_RECEIPT: {"maxCount": 1, "types": IMAGE_TYPES + DOCUMENT_TYPES},
+}
+
+BUCKET_FILE_SIZE_LIMIT = VIDEO_MAX_BYTES
+BUCKET_ALLOWED_TYPES = IMAGE_TYPES + VIDEO_TYPES + DOCUMENT_TYPES
+
+
+__all__ = [
+    "ATTACHMENT_LIMITS",
+    "BUCKET_ALLOWED_TYPES",
+    "BUCKET_FILE_SIZE_LIMIT",
+    "IMAGE_MAX_BYTES",
+    "KIND_COMPLETION",
+    "KIND_RECEIPT",
+    "MAX_BYTES_BY_TYPE",
+    "VIDEO_MAX_BYTES",
+]

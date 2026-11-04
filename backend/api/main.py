@@ -11,8 +11,10 @@ from core.error import registerErrorHandlers
 from core.logger import configureLogging, getLogger
 from core.middleware import OriginCheckMiddleware, RequestIdMiddleware
 from core.request_context import REQUEST_ID_HEADER
+from core.storage import closeStorage
 from modules.auth.router import router as authRouter
 from modules.user.router import router as userRouter
+from worker.main import startEmbeddedWorker
 
 log = getLogger(__name__)
 
@@ -26,6 +28,7 @@ PUBLIC_ROUTES = frozenset({
 })
 ALLOWED_METHODS = ["GET", "POST", "PATCH", "PUT", "DELETE"]
 ALLOWED_HEADERS = ["Content-Type", REQUEST_ID_HEADER]
+EMBEDDED_WORKER_STOP_SECONDS = 10
 
 systemRouter = APIRouter()
 
@@ -66,12 +69,21 @@ def assertRoutesProtected(routers, publicRoutes=PUBLIC_ROUTES):
 def featureRouters():
     return [systemRouter, authRouter, userRouter]
 
-# Validates required settings at server start and warms the dummy password hash.
+# Validates required settings at server start, warms the dummy password hash, and runs the worker
+# in a background thread when WORKER_EMBEDDED is on, stopping it and the storage client at shutdown.
 @asynccontextmanager
 async def lifespan(app):
     config.requireStartupSettings()
     dummyHash()
-    yield
+    embedded = startEmbeddedWorker() if config.workerEmbedded() else None
+    try:
+        yield
+    finally:
+        if embedded is not None:
+            worker, thread = embedded
+            worker.stop()
+            thread.join(EMBEDDED_WORKER_STOP_SECONDS)
+        closeStorage()
 
 # Builds the FastAPI application; run with uvicorn api.main:createApp --factory --app-dir backend.
 def createApp():

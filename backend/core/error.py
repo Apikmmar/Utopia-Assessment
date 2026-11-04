@@ -5,6 +5,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from core import config
 from core.db import DatabaseError
 from core.logger import getLogger
+from core.storage import StorageUnavailable
 from core.request_context import REQUEST_ID_HEADER, bindRequestId, resetRequestId
 
 log = getLogger(__name__)
@@ -23,6 +24,22 @@ NOT_FOUND_CODE = "NOT_FOUND"
 METHOD_NOT_ALLOWED_CODE = "METHOD_NOT_ALLOWED"
 SERVICE_UNAVAILABLE_CODE = "SERVICE_UNAVAILABLE"
 INTERNAL_ERROR_CODE = "INTERNAL_ERROR"
+ORDER_NOT_FOUND_CODE = "ORDER_NOT_FOUND"
+INVALID_TRANSITION_CODE = "INVALID_TRANSITION"
+ORDER_LOCKED_CODE = "ORDER_LOCKED"
+INVALID_SERVICE_TYPE_CODE = "INVALID_SERVICE_TYPE"
+INVALID_TECHNICIAN_CODE = "INVALID_TECHNICIAN"
+COMPLETION_EXISTS_CODE = "COMPLETION_EXISTS"
+COMPLETION_NOT_FOUND_CODE = "COMPLETION_NOT_FOUND"
+ATTACHMENT_LIMIT_CODE = "ATTACHMENT_LIMIT"
+ATTACHMENT_INVALID_CODE = "ATTACHMENT_INVALID"
+ATTACHMENT_NOT_UPLOADED_CODE = "ATTACHMENT_NOT_UPLOADED"
+ATTACHMENT_NOT_FOUND_CODE = "ATTACHMENT_NOT_FOUND"
+ATTACHMENT_LOCKED_CODE = "ATTACHMENT_LOCKED"
+STORAGE_UNAVAILABLE_CODE = "STORAGE_UNAVAILABLE"
+NOTIFICATION_NOT_FOUND_CODE = "NOTIFICATION_NOT_FOUND"
+NOTIFICATION_NOT_READY_CODE = "NOTIFICATION_NOT_READY"
+NOTIFICATION_NOT_FAILED_CODE = "NOTIFICATION_NOT_FAILED"
 
 STATUS_BY_CODE = {
     VALIDATION_FAILED_CODE: 422,
@@ -39,12 +56,29 @@ STATUS_BY_CODE = {
     METHOD_NOT_ALLOWED_CODE: 405,
     SERVICE_UNAVAILABLE_CODE: 503,
     INTERNAL_ERROR_CODE: 500,
+    ORDER_NOT_FOUND_CODE: 404,
+    INVALID_TRANSITION_CODE: 409,
+    ORDER_LOCKED_CODE: 409,
+    INVALID_SERVICE_TYPE_CODE: 422,
+    INVALID_TECHNICIAN_CODE: 422,
+    COMPLETION_EXISTS_CODE: 409,
+    COMPLETION_NOT_FOUND_CODE: 404,
+    ATTACHMENT_LIMIT_CODE: 409,
+    ATTACHMENT_INVALID_CODE: 422,
+    ATTACHMENT_NOT_UPLOADED_CODE: 422,
+    ATTACHMENT_NOT_FOUND_CODE: 404,
+    ATTACHMENT_LOCKED_CODE: 409,
+    STORAGE_UNAVAILABLE_CODE: 503,
+    NOTIFICATION_NOT_FOUND_CODE: 404,
+    NOTIFICATION_NOT_READY_CODE: 409,
+    NOTIFICATION_NOT_FAILED_CODE: 409,
 }
 CODE_BY_STATUS = {404: NOT_FOUND_CODE, 405: METHOD_NOT_ALLOWED_CODE}
 DEFAULT_ERROR_STATUS = 400
 
 VALIDATION_FAILED_MESSAGE = "Request validation failed."
 SERVICE_UNAVAILABLE_MESSAGE = "Service temporarily unavailable."
+STORAGE_UNAVAILABLE_MESSAGE = "File storage is temporarily unavailable."
 INTERNAL_ERROR_MESSAGE = "Internal server error."
 
 
@@ -106,6 +140,11 @@ async def databaseErrorHandler(request, error):
     log.error("database_unavailable error_type=%s", type(error).__name__)
     return JSONResponse(errorBody(SERVICE_UNAVAILABLE_MESSAGE, SERVICE_UNAVAILABLE_CODE), status_code=503)
 
+# Answers a storage failure or missing storage settings with 503 and no detail.
+async def storageErrorHandler(request, error):
+    log.error("storage_unavailable reason=%s", error.reason)
+    return JSONResponse(errorBody(STORAGE_UNAVAILABLE_MESSAGE, STORAGE_UNAVAILABLE_CODE), status_code=503)
+
 # Answers anything unhandled with 500 and the request id as correlation id, logging the exception.
 async def unhandledErrorHandler(request, error):
     correlationId = scopeRequestId(request)
@@ -131,23 +170,40 @@ def registerErrorHandlers(app):
     app.add_exception_handler(StarletteHTTPException, httpErrorHandler)
     app.add_exception_handler(RequestValidationError, validationErrorHandler)
     app.add_exception_handler(DatabaseError, databaseErrorHandler)
+    app.add_exception_handler(StorageUnavailable, storageErrorHandler)
     app.add_exception_handler(Exception, unhandledErrorHandler)
 
 
 __all__ = [
+    "ATTACHMENT_INVALID_CODE",
+    "ATTACHMENT_LIMIT_CODE",
+    "ATTACHMENT_LOCKED_CODE",
+    "ATTACHMENT_NOT_FOUND_CODE",
+    "ATTACHMENT_NOT_UPLOADED_CODE",
     "BAD_ORIGIN_CODE",
+    "COMPLETION_EXISTS_CODE",
+    "COMPLETION_NOT_FOUND_CODE",
     "DEFAULT_ERROR_STATUS",
     "EMAIL_TAKEN_CODE",
     "FORBIDDEN_CODE",
     "INTERNAL_ERROR_CODE",
     "INVALID_CREDENTIALS_CODE",
     "INVALID_ROLE_CODE",
+    "INVALID_SERVICE_TYPE_CODE",
+    "INVALID_TECHNICIAN_CODE",
+    "INVALID_TRANSITION_CODE",
     "METHOD_NOT_ALLOWED_CODE",
+    "NOTIFICATION_NOT_FAILED_CODE",
+    "NOTIFICATION_NOT_FOUND_CODE",
+    "NOTIFICATION_NOT_READY_CODE",
     "NOT_AUTHENTICATED_CODE",
     "NOT_FOUND_CODE",
+    "ORDER_LOCKED_CODE",
+    "ORDER_NOT_FOUND_CODE",
     "SELF_DEMOTE_CODE",
     "SERVICE_UNAVAILABLE_CODE",
     "STATUS_BY_CODE",
+    "STORAGE_UNAVAILABLE_CODE",
     "USER_NOT_FOUND_CODE",
     "VALIDATION_FAILED_CODE",
     "WEAK_PASSWORD_CODE",
