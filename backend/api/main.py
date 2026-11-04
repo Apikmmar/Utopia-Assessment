@@ -14,6 +14,7 @@ from core.request_context import REQUEST_ID_HEADER
 from core.storage import closeStorage
 from modules.auth.router import router as authRouter
 from modules.notification.router import router as notificationRouter
+from modules.order.router import router as orderRouter
 from modules.service_type.router import router as serviceTypeRouter
 from modules.user.router import router as userRouter
 from worker.main import startEmbeddedWorker
@@ -69,7 +70,7 @@ def assertRoutesProtected(routers, publicRoutes=PUBLIC_ROUTES):
 
 # Returns every router to register; add new feature routers here.
 def featureRouters():
-    return [systemRouter, authRouter, userRouter, serviceTypeRouter, notificationRouter]
+    return [systemRouter, authRouter, userRouter, serviceTypeRouter, notificationRouter, orderRouter]
 
 # Validates required settings at server start, warms the dummy password hash, and runs the worker
 # in a background thread when WORKER_EMBEDDED is on, stopping it and the storage client at shutdown.

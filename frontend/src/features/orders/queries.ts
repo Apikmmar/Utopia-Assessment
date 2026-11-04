@@ -1,9 +1,9 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient, type Query } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient, type Query, type QueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import * as api from "./api";
 import type { OrderListFilters } from "./filters";
 import { hasQueued, POLL_INTERVAL_MS, PREPARE_TIMEOUT_MS, type NotificationFilters } from "./notifications";
-import type { NotificationList } from "./schemas";
+import type { NotificationList, OrderWithNotification, UpdateOrderPayload } from "./schemas";
 
 const SERVICE_TYPES_STALE_MS = 10 * 60 * 1000;
 const SENDABLE_COUNT_FILTERS: NotificationFilters = { sendable: true, pageSize: 1 };
@@ -19,6 +19,7 @@ export const orderKeys = {
   notificationsAll: () => [...orderKeys.all, "notifications"] as const,
   notifications: (filters: NotificationFilters) => [...orderKeys.notificationsAll(), filters] as const,
   serviceTypes: () => [...orderKeys.all, "service-types"] as const,
+  technicians: () => [...orderKeys.all, "technicians"] as const,
 };
 
 // Reads the active service types, which rarely change, so they stay fresh for ten minutes.
@@ -27,6 +28,71 @@ export function useServiceTypes() {
     queryKey: orderKeys.serviceTypes(),
     queryFn: ({ signal }) => api.listServiceTypes(signal),
     staleTime: SERVICE_TYPES_STALE_MS,
+  });
+}
+
+// Reads one filtered page of orders, keeping the previous page visible while the next loads.
+export function useOrders(filters: OrderListFilters, options: { refetchOnWindowFocus?: boolean } = {}) {
+  return useQuery({
+    queryKey: orderKeys.list(filters),
+    queryFn: ({ signal }) => api.listOrders(filters, signal),
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: options.refetchOnWindowFocus ?? false,
+  });
+}
+
+// Reads one order with its event timeline.
+export function useOrder(orderId: string) {
+  return useQuery({ queryKey: orderKeys.detail(orderId), queryFn: ({ signal }) => api.getOrder(orderId, signal) });
+}
+
+// Reads the technicians an admin can assign; only admins may call it.
+export function useTechnicians(enabled = true) {
+  return useQuery({ queryKey: orderKeys.technicians(), queryFn: ({ signal }) => api.listTechnicians(signal), enabled });
+}
+
+// Refreshes everything one order change can affect: its detail, every list, and every notification list.
+function invalidateOrder(queryClient: QueryClient, orderId: string) {
+  return Promise.all([
+    queryClient.invalidateQueries({ queryKey: orderKeys.detail(orderId) }),
+    queryClient.invalidateQueries({ queryKey: orderKeys.lists() }),
+    queryClient.invalidateQueries({ queryKey: orderKeys.notificationsAll() }),
+  ]);
+}
+
+// Creates an order and refreshes the order and notification lists.
+export function useCreateOrder() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: api.createOrder,
+    onSuccess: (result: OrderWithNotification) => invalidateOrder(queryClient, result.order.orderId),
+  });
+}
+
+// Edits an order and refreshes what it affects.
+export function useUpdateOrder(orderId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: UpdateOrderPayload) => api.updateOrder(orderId, payload),
+    onSuccess: () => invalidateOrder(queryClient, orderId),
+  });
+}
+
+// Assigns a technician and refreshes what it affects.
+export function useAssignTechnician(orderId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (technicianId: string) => api.assignTechnician(orderId, technicianId),
+    onSuccess: () => invalidateOrder(queryClient, orderId),
+  });
+}
+
+// Runs one status step; any outcome, including a 409 from a status that changed underneath, refreshes the order.
+export function useChangeStatus(orderId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (action: "start" | "review" | "close") => api.changeStatus(orderId, action),
+    onSettled: () => invalidateOrder(queryClient, orderId),
   });
 }
 

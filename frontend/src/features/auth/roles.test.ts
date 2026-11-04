@@ -15,6 +15,12 @@ describe("role registry", () => {
   });
 
   it("gives an unknown role only the home navigation entry", () => {
-    expect(navigationFor("auditor")).toEqual([{ to: "/", label: "Home" }]);
+    expect(navigationFor("auditor")).toEqual([{ to: "/", label: "Home", end: true }]);
+  });
+
+  it("gives each role its own work screens and notifications", () => {
+    expect(navigationFor("admin").map((item) => item.label)).toEqual(["Orders", "Notifications", "Users"]);
+    expect(navigationFor("technician").map((item) => item.label)).toEqual(["My jobs", "Notifications"]);
+    expect(navigationFor("manager").map((item) => item.label)).toEqual(["Review", "Orders", "Notifications"]);
   });
 });

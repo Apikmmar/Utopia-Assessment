@@ -45,7 +45,7 @@ describe("auth screens (mocked backend: fetch is stubbed, no real server)", () =
     const pending = await screen.findByRole("button", { name: "Signing in..." });
     expect(pending).toBeDisabled();
     release();
-    expect(await screen.findByRole("heading", { name: "Users" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Orders" })).toBeInTheDocument();
   });
 
   it("keeps the typed input and shows one generic message after a 401", async () => {
@@ -105,10 +105,10 @@ describe("auth screens (mocked backend: fetch is stubbed, no real server)", () =
 
     expect(await screen.findByRole("heading", { name: "Not allowed" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Users" })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "My jobs" })).toBeInTheDocument();
   });
 
-  it("shows the technician home placeholder and logs out back to /login", async () => {
+  it("sends a technician home to My jobs and logs out back to /login", async () => {
     const calls = mockBackend({
       "GET /auth/me": { status: 200, body: { user: technicianUser } },
       "POST /auth/logout": { status: 204 },
@@ -116,7 +116,7 @@ describe("auth screens (mocked backend: fetch is stubbed, no real server)", () =
     const user = userEvent.setup();
     renderApp("/");
 
-    expect(await screen.findByRole("heading", { name: "Technician home" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "My jobs" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Log out" }));
     expect(await screen.findByRole("heading", { name: "Log in" })).toBeInTheDocument();
     expect(calls.some((call) => call.method === "POST" && call.path === "/auth/logout")).toBe(true);

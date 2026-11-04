@@ -39,3 +39,7 @@ export function statusLabel(status: string) {
 export function statusTone(status: string): StatusTone {
   return isKnownStatus(status) ? ORDER_STATUS_TONES[status] : "neutral";
 }
+
+export const EDITABLE_STATUSES: readonly OrderStatus[] = ["new", "assigned"];
+export const ACTIVE_JOB_STATUSES: OrderStatus[] = ["assigned", "in_progress"];
+export const FINISHED_JOB_STATUSES: OrderStatus[] = ["job_done", "reviewed", "closed"];

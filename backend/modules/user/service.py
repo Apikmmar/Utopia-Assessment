@@ -70,6 +70,14 @@ def getUser(actor, userId):
         return None, USER_NOT_FOUND
     return row, None
 
+# Returns {user_id, name, phone} for an existing technician, or None when the user is unknown or has another role;
+# the order module uses it inside its own transaction.
+def technician(conn, userId):
+    row = repository.getUserById(userId, conn) if userId is not None else None
+    if row is None or row["role_code"] != ROLE_TECHNICIAN:
+        return None
+    return {"user_id": row["user_id"], "name": row["name"], "phone": row["phone"]}
+
 # Validates the data, inserts the user as the actor, and returns (user, error). The password is
 # hashed with no connection held, and a duplicate email answers EMAIL_TAKEN.
 def createUser(actor, name, email, phone, age, roleCode, password):
@@ -152,5 +160,6 @@ __all__ = [
     "createUser",
     "getUser",
     "listUsers",
+    "technician",
     "updateUser",
 ]

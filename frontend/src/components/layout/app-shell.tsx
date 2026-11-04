@@ -29,6 +29,7 @@ export function AppShell({ user, children }: AppShellProps) {
               <NavLink
                 key={item.to}
                 to={item.to}
+                end={item.end}
                 className={({ isActive }) =>
                   cn(
                     "flex min-h-9 items-center rounded-lg px-3 text-sm font-medium transition-colors",

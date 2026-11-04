@@ -27,7 +27,7 @@ export class ApiError extends Error {
 export type RequestOptions = {
   method?: "GET" | "POST" | "PATCH";
   body?: unknown;
-  query?: Record<string, string | number | undefined>;
+  query?: Record<string, string | number | readonly string[] | undefined>;
   signal?: AbortSignal;
   skipUnauthorizedHandler?: boolean;
 };
@@ -41,10 +41,14 @@ export function setUnauthorizedHandler(handler: UnauthorizedHandler | null) {
   unauthorizedHandler = handler;
 }
 
-// Builds the request URL with only the query values that are set.
+// Builds the request URL with only the query values that are set, repeating the key for each value of a list.
 function buildUrl(path: string, query: RequestOptions["query"]) {
   const params = new URLSearchParams();
   Object.entries(query ?? {}).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((item: string) => params.append(key, item));
+      return;
+    }
     if (value !== undefined && value !== "") params.set(key, String(value));
   });
   const queryString = params.toString();

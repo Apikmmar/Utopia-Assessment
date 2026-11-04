@@ -1,23 +1,25 @@
 import { isKnownRole, type RoleCode } from "./roles";
 
-export type NavItem = { to: string; label: string; showSendableCount?: boolean };
+export type NavItem = { to: string; label: string; showSendableCount?: boolean; end?: boolean };
 
 const NAV_BY_ROLE: Record<RoleCode, NavItem[]> = {
   admin: [
+    { to: "/orders", label: "Orders" },
     { to: "/notifications", label: "Notifications", showSendableCount: true },
     { to: "/users", label: "Users" },
   ],
   technician: [
-    { to: "/", label: "Home" },
+    { to: "/jobs", label: "My jobs" },
     { to: "/notifications", label: "Notifications", showSendableCount: true },
   ],
   manager: [
-    { to: "/", label: "Home" },
+    { to: "/review", label: "Review" },
+    { to: "/orders", label: "Orders" },
     { to: "/notifications", label: "Notifications" },
   ],
 };
 
-const FALLBACK_NAV: NavItem[] = [{ to: "/", label: "Home" }];
+const FALLBACK_NAV: NavItem[] = [{ to: "/", label: "Home", end: true }];
 
 // Returns only the navigation entries a role may use; an unknown role gets the home link only.
 export function navigationFor(role: string): NavItem[] {

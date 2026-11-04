@@ -109,7 +109,7 @@ test.describe("mocked-backend UI journey (page.route stands in for FastAPI; not 
     await page.getByLabel("Email").fill("tom@example.com");
     await page.getByLabel("Password").fill(technicianPassword);
     await page.getByRole("button", { name: "Log in" }).click();
-    await expect(page.getByRole("heading", { name: "Technician home" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "My jobs" })).toBeVisible();
 
     await page.goto("/users");
     await expect(page.getByRole("heading", { name: "Not allowed" })).toBeVisible();

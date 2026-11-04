@@ -1,0 +1,106 @@
+from core.auth import ROLE_ADMIN, ROLE_MANAGER, ROLE_TECHNICIAN
+
+STATUS_NEW = "new"
+STATUS_ASSIGNED = "assigned"
+STATUS_IN_PROGRESS = "in_progress"
+STATUS_JOB_DONE = "job_done"
+STATUS_REVIEWED = "reviewed"
+STATUS_CLOSED = "closed"
+ORDER_STATUSES = (STATUS_NEW, STATUS_ASSIGNED, STATUS_IN_PROGRESS, STATUS_JOB_DONE, STATUS_REVIEWED, STATUS_CLOSED)
+
+TRANSITIONS = {
+    (STATUS_NEW, STATUS_ASSIGNED): ROLE_ADMIN,
+    (STATUS_ASSIGNED, STATUS_IN_PROGRESS): ROLE_TECHNICIAN,
+    (STATUS_IN_PROGRESS, STATUS_JOB_DONE): ROLE_TECHNICIAN,
+    (STATUS_JOB_DONE, STATUS_REVIEWED): ROLE_MANAGER,
+    (STATUS_REVIEWED, STATUS_CLOSED): ROLE_MANAGER,
+}
+EDITABLE_STATUSES = (STATUS_NEW, STATUS_ASSIGNED)
+ASSIGNABLE_STATUSES = (STATUS_NEW, STATUS_ASSIGNED)
+
+STEP_TIMESTAMPS = {
+    STATUS_IN_PROGRESS: "started_at",
+    STATUS_JOB_DONE: "job_done_at",
+    STATUS_REVIEWED: "reviewed_at",
+    STATUS_CLOSED: "closed_at",
+}
+STEP_ACTOR_COLUMNS = {
+    STATUS_REVIEWED: "reviewed_by_id",
+    STATUS_CLOSED: "closed_by_id",
+}
+
+EVENT_CREATED = "created"
+EVENT_EDITED = "edited"
+EVENT_ASSIGNED = "assigned"
+EVENT_REASSIGNED = "reassigned"
+EVENT_NOTIFICATION_QUEUED = "notification_queued"
+EVENT_BY_STATUS = {
+    STATUS_IN_PROGRESS: "started",
+    STATUS_JOB_DONE: "completed",
+    STATUS_REVIEWED: "reviewed",
+    STATUS_CLOSED: "closed",
+}
+
+SORT_NEWEST = "newest"
+SORT_OLDEST = "oldest"
+
+CUSTOMER_NAME_MAX_LENGTH = 100
+ADDRESS_MAX_LENGTH = 500
+PROBLEM_MAX_LENGTH = 2000
+ADMIN_NOTES_MAX_LENGTH = 2000
+SEARCH_MAX_LENGTH = 100
+TEXT_INPUT_MAX_LENGTH = 4000
+AMOUNT_INPUT_MAX_LENGTH = 20
+
+EDITABLE_FIELDS = {
+    "customer_name": "customerName",
+    "customer_phone": "customerPhone",
+    "address": "address",
+    "problem_description": "problemDescription",
+    "service_type_id": "serviceTypeId",
+    "quoted_price": "quotedPrice",
+    "admin_notes": "adminNotes",
+}
+
+ORDER_NOT_FOUND_MESSAGE = "Order not found."
+ORDER_LOCKED_MESSAGE = "This order can no longer be changed because the job has started."
+INVALID_TECHNICIAN_MESSAGE = "Choose an existing technician."
+INVALID_FIELDS_MESSAGE = "One or more fields are invalid."
+STATUS_MESSAGE = "The order is now {status}, so this action is not allowed."
+
+
+__all__ = [
+    "ADDRESS_MAX_LENGTH",
+    "ADMIN_NOTES_MAX_LENGTH",
+    "AMOUNT_INPUT_MAX_LENGTH",
+    "ASSIGNABLE_STATUSES",
+    "CUSTOMER_NAME_MAX_LENGTH",
+    "EDITABLE_FIELDS",
+    "EDITABLE_STATUSES",
+    "EVENT_ASSIGNED",
+    "EVENT_BY_STATUS",
+    "EVENT_CREATED",
+    "EVENT_EDITED",
+    "EVENT_NOTIFICATION_QUEUED",
+    "EVENT_REASSIGNED",
+    "INVALID_FIELDS_MESSAGE",
+    "INVALID_TECHNICIAN_MESSAGE",
+    "ORDER_LOCKED_MESSAGE",
+    "ORDER_NOT_FOUND_MESSAGE",
+    "ORDER_STATUSES",
+    "PROBLEM_MAX_LENGTH",
+    "SEARCH_MAX_LENGTH",
+    "SORT_NEWEST",
+    "SORT_OLDEST",
+    "STATUS_ASSIGNED",
+    "STATUS_CLOSED",
+    "STATUS_IN_PROGRESS",
+    "STATUS_JOB_DONE",
+    "STATUS_MESSAGE",
+    "STATUS_NEW",
+    "STATUS_REVIEWED",
+    "STEP_ACTOR_COLUMNS",
+    "STEP_TIMESTAMPS",
+    "TEXT_INPUT_MAX_LENGTH",
+    "TRANSITIONS",
+]
