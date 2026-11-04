@@ -18,6 +18,10 @@ UNKNOWN_JOB_TYPE = "UnknownJobType"
 STOP_SIGNALS = (signal.SIGTERM, signal.SIGINT)
 
 
+class UnknownJobType(Exception):
+    pass
+
+
 class Worker:
     # Holds the handler map, the poll interval, and a stop flag; clock and wait are injectable for tests.
     def __init__(self, handlers, pollSeconds, workerId=None, clock=time.monotonic):
@@ -62,10 +66,10 @@ class Worker:
         handler = self.handlers.get(jobType)
         try:
             if handler is None:
-                raise LookupError(UNKNOWN_JOB_TYPE)
+                raise UnknownJobType()
             handler.run(job["payload"])
         except Exception as error:
-            reason = str(error) if isinstance(error, LookupError) else type(error).__name__
+            reason = UNKNOWN_JOB_TYPE if isinstance(error, UnknownJobType) else type(error).__name__
             exhausted = jobs.failJob(jobId, job["attempt"], reason)
             if not exhausted:
                 log.warning("job_retry job_id=%s job_type=%s attempt=%s error_type=%s", jobId, jobType, job["attempt"], reason)

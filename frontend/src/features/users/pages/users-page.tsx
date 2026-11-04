@@ -8,7 +8,7 @@ import { failureMessage } from "@/lib/failure-message";
 import { UserFilters } from "../components/user-filters";
 import { UsersTable } from "../components/users-table";
 import { readUserFilters, toUserFilterParams } from "../filters";
-import { useDebouncedCallback } from "../hooks/use-debounced-callback";
+import { useDebouncedCallback } from "@/lib/use-debounced-callback";
 import { useUsers } from "../queries";
 import type { UserListFilters } from "../types";
 

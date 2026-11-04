@@ -1,11 +1,20 @@
 import { isKnownRole, type RoleCode } from "./roles";
 
-export type NavItem = { to: string; label: string };
+export type NavItem = { to: string; label: string; showSendableCount?: boolean };
 
 const NAV_BY_ROLE: Record<RoleCode, NavItem[]> = {
-  admin: [{ to: "/users", label: "Users" }],
-  technician: [{ to: "/", label: "Home" }],
-  manager: [{ to: "/", label: "Home" }],
+  admin: [
+    { to: "/notifications", label: "Notifications", showSendableCount: true },
+    { to: "/users", label: "Users" },
+  ],
+  technician: [
+    { to: "/", label: "Home" },
+    { to: "/notifications", label: "Notifications", showSendableCount: true },
+  ],
+  manager: [
+    { to: "/", label: "Home" },
+    { to: "/notifications", label: "Notifications" },
+  ],
 };
 
 const FALLBACK_NAV: NavItem[] = [{ to: "/", label: "Home" }];
