@@ -1,4 +1,7 @@
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+import { TextLink } from "@/components/ui/text-link";
 import { CreateUserForm } from "../components/create-user-form";
 import { useCreateUser } from "../queries";
 import type { CreateUserPayload } from "../schemas";
@@ -14,14 +17,15 @@ export function CreateUserPage() {
   };
 
   return (
-    <section aria-labelledby="create-user-title" className="flex flex-col gap-4">
-      <h1 id="create-user-title" className="text-2xl font-semibold">
-        New user
-      </h1>
-      <CreateUserForm onSubmit={submit} />
-      <Link to="/users" className="inline-flex min-h-11 items-center text-primary underline">
+    <section aria-labelledby="create-user-title" className="flex max-w-2xl flex-col gap-6">
+      <TextLink to="/users" className="-mb-4 self-start">
+        <span aria-hidden="true" className="mr-1">&larr;</span>
         Back to users
-      </Link>
+      </TextLink>
+      <PageHeader id="create-user-title" title="New user" description="Register an account and choose its role." />
+      <Card>
+        <CreateUserForm onSubmit={submit} />
+      </Card>
     </section>
   );
 }

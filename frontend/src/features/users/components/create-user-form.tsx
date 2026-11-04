@@ -58,17 +58,18 @@ export function CreateUserForm({ onSubmit }: CreateUserFormProps) {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={submit} noValidate className="flex max-w-xl flex-col gap-3">
-        <Field id="create-email" label="Email" error={errors.email?.message}>
+      <form onSubmit={submit} noValidate className="grid gap-5 sm:grid-cols-2">
+        <Field id="create-email" label="Email" error={errors.email?.message} className="sm:col-span-2">
           <Input type="email" autoComplete="off" {...fieldAria("create-email", errors.email?.message)} {...register("email")} />
         </Field>
         <UserDetailsFields idPrefix="create" />
-        <Field id="create-password" label="Password" error={errors.password?.message} hint="Use 10 to 128 characters.">
+        <Field id="create-password" label="Password" error={errors.password?.message} hint="Use 10 to 128 characters." className="sm:col-span-2">
           <div className="flex gap-2">
             <Input
               type="text"
               autoComplete="new-password"
               spellCheck={false}
+              className="font-mono"
               {...fieldAria("create-password", errors.password?.message, true)}
               {...register("password")}
             />
@@ -77,10 +78,16 @@ export function CreateUserForm({ onSubmit }: CreateUserFormProps) {
             </Button>
           </div>
         </Field>
-        {formError ? <Alert tone="error">{formError}</Alert> : null}
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Creating..." : "Create user"}
-        </Button>
+        {formError ? (
+          <div className="sm:col-span-2">
+            <Alert tone="error">{formError}</Alert>
+          </div>
+        ) : null}
+        <div className="flex justify-end border-t border-border pt-5 sm:col-span-2">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Creating..." : "Create user"}
+          </Button>
+        </div>
       </form>
     </FormProvider>
   );

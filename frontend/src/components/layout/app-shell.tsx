@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { NavLink } from "react-router";
+import { Badge } from "@/components/ui/badge";
+import { BrandMark } from "@/components/ui/brand-mark";
 import { Button } from "@/components/ui/button";
 import { navigationFor } from "@/features/auth/navigation";
 import { useLogout } from "@/features/auth/queries";
@@ -16,16 +18,19 @@ export function AppShell({ user, children }: AppShellProps) {
   const logout = useLogout();
   return (
     <div className="min-h-screen">
-      <header className="border-b border-border bg-card">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-2">
+      <header className="sticky top-0 z-10 border-b border-border bg-card/80 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-2 sm:px-6">
           <nav aria-label="Main" className="flex items-center gap-1">
-            <span className="mr-3 text-base font-semibold">Utopia</span>
+            <BrandMark className="mr-4" />
             {navigationFor(user.roleCode).map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  cn("flex min-h-11 items-center rounded-md px-3 text-sm font-medium", isActive ? "bg-slate-200" : "hover:bg-slate-100")
+                  cn(
+                    "flex min-h-9 items-center rounded-lg px-3 text-sm font-medium transition-colors",
+                    isActive ? "bg-subtle text-foreground" : "text-muted hover:text-foreground",
+                  )
                 }
               >
                 {item.label}
@@ -33,16 +38,17 @@ export function AppShell({ user, children }: AppShellProps) {
             ))}
           </nav>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-muted">
-              {user.name} ({roleLabel(user.roleCode)})
+            <span className="hidden items-center gap-2 text-sm sm:flex">
+              <span className="font-medium">{user.name}</span>
+              <Badge>{roleLabel(user.roleCode)}</Badge>
             </span>
-            <Button variant="outline" onClick={() => logout.mutate()} disabled={logout.isPending}>
+            <Button variant="ghost" className="min-h-9 px-3" onClick={() => logout.mutate()} disabled={logout.isPending}>
               Log out
             </Button>
           </div>
         </div>
       </header>
-      <main ref={mainRef} tabIndex={-1} className="mx-auto max-w-6xl px-4 py-6 outline-none">
+      <main ref={mainRef} tabIndex={-1} className="mx-auto max-w-5xl px-4 py-10 outline-none sm:px-6">
         {children}
       </main>
     </div>

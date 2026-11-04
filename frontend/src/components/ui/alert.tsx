@@ -9,11 +9,12 @@ export function Alert({ tone, children }: AlertProps) {
     <div
       role={tone === "error" ? "alert" : "status"}
       className={cn(
-        "rounded-md border px-3 py-2 text-sm",
-        tone === "error" ? "border-danger bg-danger-soft text-danger" : "border-success bg-success-soft text-success",
+        "flex items-start gap-2.5 rounded-lg border px-3.5 py-2.5 text-sm",
+        tone === "error" ? "border-red-200 bg-danger-soft text-danger" : "border-green-200 bg-success-soft text-success",
       )}
     >
-      {children}
+      <span aria-hidden="true" className={cn("mt-1.5 size-1.5 shrink-0 rounded-full", tone === "error" ? "bg-danger" : "bg-success")} />
+      <div>{children}</div>
     </div>
   );
 }

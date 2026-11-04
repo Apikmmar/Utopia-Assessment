@@ -1,4 +1,5 @@
 import { Navigate } from "react-router";
+import { PageHeader } from "@/components/ui/page-header";
 import { useMe } from "../queries";
 import { ROLE_LABELS, isKnownRole } from "../roles";
 
@@ -10,11 +11,11 @@ export function HomePage() {
   if (user.roleCode === "admin") return <Navigate to="/users" replace />;
   const title = isKnownRole(user.roleCode) ? `${ROLE_LABELS[user.roleCode]} home` : "Home";
   return (
-    <section aria-labelledby="home-title" className="flex flex-col gap-2">
-      <h1 id="home-title" className="text-2xl font-semibold">
-        {title}
-      </h1>
-      <p className="text-muted">Welcome, {user.name}. Your work screens will appear here.</p>
+    <section aria-labelledby="home-title" className="flex flex-col gap-8">
+      <PageHeader id="home-title" title={title} description={`Welcome, ${user.name}.`} />
+      <div className="rounded-xl border border-dashed border-border-strong px-6 py-16 text-center">
+        <p className="text-sm text-muted">Your work screens will appear here.</p>
+      </div>
     </section>
   );
 }

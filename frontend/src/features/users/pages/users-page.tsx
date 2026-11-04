@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { Pagination } from "@/components/ui/pagination";
 import { failureMessage } from "@/lib/failure-message";
 import { UserFilters } from "../components/user-filters";
@@ -40,15 +41,17 @@ export function UsersPage() {
   };
 
   return (
-    <section aria-labelledby="users-title" className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 id="users-title" className="text-2xl font-semibold">
-          Users
-        </h1>
-        <Button asChild>
-          <Link to="/users/new">New user</Link>
-        </Button>
-      </div>
+    <section aria-labelledby="users-title" className="flex flex-col gap-6">
+      <PageHeader
+        id="users-title"
+        title="Users"
+        description="Manage who can sign in and what they can do."
+        actions={
+          <Button asChild>
+            <Link to="/users/new">New user</Link>
+          </Button>
+        }
+      />
       {notice ? <Alert tone="success">{notice}</Alert> : null}
       <UserFilters
         search={searchDraft}
@@ -60,18 +63,18 @@ export function UsersPage() {
       />
       <div aria-busy={users.isFetching} className="flex flex-col gap-4">
         {users.isPending ? (
-          <p role="status" className="text-sm text-muted">
+          <p role="status" className="rounded-xl border border-border bg-card px-6 py-16 text-center text-sm text-muted">
             Loading users...
           </p>
         ) : users.isError ? (
-          <div role="alert" className="flex flex-col items-start gap-3 text-sm text-danger">
+          <div role="alert" className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card px-6 py-16 text-center text-sm text-danger">
             <p>{failureMessage(users.error, LOAD_FAILURE_MESSAGE)}</p>
             <Button variant="outline" onClick={() => void users.refetch()}>
               Retry
             </Button>
           </div>
         ) : users.data.items.length === 0 ? (
-          <p role="status" className="text-sm text-muted">
+          <p role="status" className="rounded-xl border border-dashed border-border-strong px-6 py-16 text-center text-sm text-muted">
             No users match your search.
           </p>
         ) : (

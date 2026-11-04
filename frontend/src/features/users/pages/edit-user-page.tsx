@@ -1,4 +1,7 @@
-import { Link, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+import { TextLink } from "@/components/ui/text-link";
 import { Button } from "@/components/ui/button";
 import { failureMessage } from "@/lib/failure-message";
 import { EditUserForm } from "../components/edit-user-form";
@@ -40,14 +43,15 @@ function EditUserLoaded({ userId }: { userId: string }) {
 export function EditUserPage() {
   const { userId = "" } = useParams();
   return (
-    <section aria-labelledby="edit-user-title" className="flex flex-col gap-4">
-      <h1 id="edit-user-title" className="text-2xl font-semibold">
-        Edit user
-      </h1>
-      <EditUserLoaded userId={userId} />
-      <Link to="/users" className="inline-flex min-h-11 items-center text-primary underline">
+    <section aria-labelledby="edit-user-title" className="flex max-w-2xl flex-col gap-6">
+      <TextLink to="/users" className="-mb-4 self-start">
+        <span aria-hidden="true" className="mr-1">&larr;</span>
         Back to users
-      </Link>
+      </TextLink>
+      <PageHeader id="edit-user-title" title="Edit user" description="Update contact details and role. Email cannot change." />
+      <Card>
+        <EditUserLoaded userId={userId} />
+      </Card>
     </section>
   );
 }

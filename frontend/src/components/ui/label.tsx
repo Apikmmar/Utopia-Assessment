@@ -4,5 +4,5 @@ import { cn } from "@/lib/cn";
 
 // Visible form label built on the Radix label primitive.
 export function Label({ className, ...props }: ComponentProps<typeof LabelPrimitive.Root>) {
-  return <LabelPrimitive.Root className={cn("text-sm font-medium text-foreground", className)} {...props} />;
+  return <LabelPrimitive.Root className={cn("text-sm font-medium text-zinc-700", className)} {...props} />;
 }

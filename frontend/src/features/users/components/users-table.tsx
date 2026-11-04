@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { roleLabel } from "@/features/auth/roles";
 import type { User } from "../schemas";
@@ -22,15 +23,17 @@ export function UsersTable({ users }: { users: User[] }) {
       <TableBody>
         {users.map((user) => (
           <TableRow key={user.userId}>
-            <TableCell>{user.name}</TableCell>
-            <TableCell>{user.email}</TableCell>
-            <TableCell>{user.phone ?? "-"}</TableCell>
-            <TableCell>{roleLabel(user.roleCode)}</TableCell>
+            <TableCell className="font-medium">{user.name}</TableCell>
+            <TableCell className="text-muted">{user.email}</TableCell>
+            <TableCell className="text-muted tabular-nums">{user.phone ?? "-"}</TableCell>
             <TableCell>
+              <Badge>{roleLabel(user.roleCode)}</Badge>
+            </TableCell>
+            <TableCell className="text-right">
               <Link
                 to={`/users/${user.userId}/edit`}
                 aria-label={`Edit ${user.name}`}
-                className="inline-flex min-h-11 items-center text-primary underline"
+                className="inline-flex min-h-9 items-center rounded-lg px-3 text-sm font-medium text-muted transition-colors hover:bg-subtle hover:text-foreground"
               >
                 Edit
               </Link>

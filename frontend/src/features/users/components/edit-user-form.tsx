@@ -49,12 +49,18 @@ export function EditUserForm({ user, onSubmit }: EditUserFormProps) {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={submit} noValidate className="flex max-w-xl flex-col gap-3">
+      <form onSubmit={submit} noValidate className="grid gap-5 sm:grid-cols-2">
         <UserDetailsFields idPrefix="edit" currentRole={user.roleCode} />
-        {formError ? <Alert tone="error">{formError}</Alert> : null}
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Saving..." : "Save changes"}
-        </Button>
+        {formError ? (
+          <div className="sm:col-span-2">
+            <Alert tone="error">{formError}</Alert>
+          </div>
+        ) : null}
+        <div className="flex justify-end border-t border-border pt-5 sm:col-span-2">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Saving..." : "Save changes"}
+          </Button>
+        </div>
       </form>
     </FormProvider>
   );
