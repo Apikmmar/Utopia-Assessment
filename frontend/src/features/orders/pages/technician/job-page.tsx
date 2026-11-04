@@ -6,13 +6,16 @@ import { TextLink } from "@/components/ui/text-link";
 import { ApiError } from "@/lib/api-client";
 import { failureMessage } from "@/lib/failure-message";
 import { AttachmentList } from "../../components/attachment-list";
+import { CompletionResult } from "../../components/completion-details";
+import { CompletionForm } from "../../components/completion-form";
 import { ErrorState, LoadingState } from "../../components/list-states";
 import { NotificationList } from "../../components/notification-list";
 import { StatusActions } from "../../components/status-actions";
 import { StatusBadge } from "../../components/status-badge";
 import { formatMyr } from "../../money";
 import { formatDateTime } from "../../notifications";
-import { useOrder } from "../../queries";
+import { useAttachments, useOrder } from "../../queries";
+import type { Order } from "../../schemas";
 import { FINISHED_JOB_STATUSES } from "../../statuses";
 
 const MAPS_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query=";
@@ -25,6 +28,14 @@ function Block({ label, children }: { label: string; children: ReactNode }) {
       <div className="text-sm break-words whitespace-pre-line">{children}</div>
     </div>
   );
+}
+
+// The completion form for a job in progress, mounted once the job's pending files are known so uploads from before a
+// reload come back; if the file list cannot load, the form still opens without them.
+function CompletionSection({ order }: { order: Order }) {
+  const attachments = useAttachments(order.orderId);
+  if (attachments.isPending) return <LoadingState>Loading completion form…</LoadingState>;
+  return <CompletionForm order={order} existing={attachments.data ?? []} />;
 }
 
 // Technician job page in the order a visit needs it: customer and phone, address and map, problem, instructions,
@@ -78,6 +89,8 @@ export function JobPage() {
           <StatusActions order={order} roleCode="technician" className="min-h-11 w-full" />
         </div>
       ) : null}
+      {order.status === "in_progress" ? <CompletionSection order={order} /> : null}
+      {(FINISHED_JOB_STATUSES as readonly string[]).includes(order.status) ? <CompletionResult orderId={order.orderId} /> : null}
       {(FINISHED_JOB_STATUSES as readonly string[]).includes(order.status) ? (
         <div className="flex flex-col gap-3">
           <h2 className="text-base font-semibold">Files</h2>

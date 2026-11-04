@@ -4,7 +4,12 @@ import type { OrderListFilters } from "./filters";
 import type { NotificationFilters } from "./notifications";
 import {
   attachmentListSchema,
+  completionEnvelopeSchema,
+  submitCompletionResponseSchema,
   uploadResponseSchema,
+  type Completion,
+  type SubmitCompletionPayload,
+  type SubmitCompletionResult,
   type Attachment,
   type UploadTicket,
   notificationEnvelopeSchema,
@@ -129,4 +134,15 @@ export function uploadFile(uploadUrl: string, file: Blob, contentType: string, o
     signal?.addEventListener("abort", () => request.abort(), { once: true });
     request.send(file);
   });
+}
+
+// Fetches an order's completion record; the server answers COMPLETION_NOT_FOUND until the job is done.
+export async function getCompletion(orderId: string, signal?: AbortSignal): Promise<Completion> {
+  return completionEnvelopeSchema.parse(await apiRequest(`/orders/${encodeURIComponent(orderId)}/completion`, { signal })).completion;
+}
+
+// Submits the completion record and returns it with the job_done order and the queued customer notification.
+export async function submitCompletion(orderId: string, payload: SubmitCompletionPayload): Promise<SubmitCompletionResult> {
+  const body = await apiRequest(`/orders/${encodeURIComponent(orderId)}/completion`, { method: "POST", body: payload });
+  return submitCompletionResponseSchema.parse(body);
 }

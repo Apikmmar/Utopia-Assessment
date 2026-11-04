@@ -56,3 +56,12 @@ def testConfigureLoggingIsIdempotentAndKeepsOtherHandlers():
         assert foreign in root.handlers
     finally:
         root.handlers = original
+
+# Bearer and apikey header values and bare JWTs, the forms the service role key travels in, are masked.
+def testMasksCredentialHeadersAndJwts():
+    jwt = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIn0.c2lnbmF0dXJl"
+    text = f"headers Authorization: Bearer {jwt} apikey: {jwt} raw {jwt} order ORD-000123"
+    record = logRecord(text)
+    RedactionFilter().filter(record)
+    assert jwt not in record.getMessage() and "eyJ" not in record.getMessage()
+    assert "ORD-000123" in record.getMessage()

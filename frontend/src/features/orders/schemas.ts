@@ -167,3 +167,74 @@ export const uploadResponseSchema = z.object({ attachment: attachmentSchema, upl
 
 export type Attachment = z.infer<typeof attachmentSchema>;
 export type UploadTicket = z.infer<typeof uploadResponseSchema>;
+
+export const WORK_DONE_MAX_LENGTH = 2000;
+export const REMARKS_MAX_LENGTH = 2000;
+
+export const PAYMENT_METHODS = ["cash", "card", "bank_transfer", "ewallet"] as const;
+export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
+
+export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
+  cash: "Cash",
+  card: "Card",
+  bank_transfer: "Bank transfer",
+  ewallet: "E-wallet",
+};
+
+// Returns the display label for a payment method, or the raw code for one this client does not know.
+export function paymentMethodLabel(method: string) {
+  return (PAYMENT_METHODS as readonly string[]).includes(method) ? PAYMENT_METHOD_LABELS[method as PaymentMethod] : method;
+}
+
+export const completionSchema = z.object({
+  completionId: z.string(),
+  orderId: z.string(),
+  technician: z.object({ userId: z.string(), name: z.string() }),
+  workDone: z.string(),
+  quotedPrice: z.string(),
+  extraCharges: z.string(),
+  finalAmount: z.string(),
+  remarks: z.string().nullable(),
+  payment: z.object({ amount: z.string(), method: z.string(), receiptAttachmentId: z.string().nullable() }).nullable(),
+  completedAt: z.string(),
+});
+
+export const completionEnvelopeSchema = z.object({ completion: completionSchema });
+export const submitCompletionResponseSchema = z.object({
+  completion: completionSchema,
+  order: orderSchema,
+  notification: notificationSchema.nullable(),
+});
+
+export type Completion = z.infer<typeof completionSchema>;
+export type SubmitCompletionResult = z.infer<typeof submitCompletionResponseSchema>;
+
+const OPTIONAL_AMOUNT_PATTERN = /^(\d{1,8}(\.\d{1,2})?)?$/;
+const AMOUNT_MESSAGE = "Enter an amount such as 20 or 20.50.";
+
+export const completionFormSchema = z
+  .object({
+    workDone: requiredText("Describe the work done.", WORK_DONE_MAX_LENGTH),
+    extraCharges: z.string().trim().regex(OPTIONAL_AMOUNT_PATTERN, AMOUNT_MESSAGE),
+    remarks: z.string().max(REMARKS_MAX_LENGTH, `Use at most ${REMARKS_MAX_LENGTH} characters.`),
+    paymentEnabled: z.boolean(),
+    paymentAmount: z.string().trim(),
+    paymentMethod: z.string(),
+  })
+  .superRefine((values, context) => {
+    if (!values.paymentEnabled) return;
+    if (!AMOUNT_PATTERN.test(values.paymentAmount)) context.addIssue({ code: "custom", path: ["paymentAmount"], message: AMOUNT_MESSAGE });
+    if (!(PAYMENT_METHODS as readonly string[]).includes(values.paymentMethod)) {
+      context.addIssue({ code: "custom", path: ["paymentMethod"], message: "Choose how the customer paid." });
+    }
+  });
+
+export type CompletionFormValues = z.infer<typeof completionFormSchema>;
+
+export type SubmitCompletionPayload = {
+  workDone: string;
+  extraCharges: string;
+  remarks?: string;
+  attachmentIds: string[];
+  payment?: { amount: string; method: string; receiptAttachmentId?: string };
+};

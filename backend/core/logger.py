@@ -12,6 +12,7 @@ SECRET_PATTERN = re.compile(
     r"""(["']?(?:new_password|newPassword|password_hash|passwordHash|password|token|service_role_key|serviceRoleKey|upload_url|uploadUrl|view_url|viewUrl|deep_link|deepLink|message)["']?\s*[=:]\s*)("[^"]*"|'[^']*'|[^\s,}]+)""",
     re.IGNORECASE,
 )
+CREDENTIAL_PATTERN = re.compile(r"(\b(?:bearer|apikey)[\s=:\"']+)[A-Za-z0-9._~+/=-]+|\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+", re.IGNORECASE)
 LOG_FORMAT = "%(asctime)s %(levelname)s [%(request_id)s] %(name)s: %(message)s"
 
 
@@ -41,8 +42,10 @@ class AppHandler(logging.StreamHandler):
     pass
 
 # Replaces the value of every secret-named key=value pair in a text with the redaction marker.
+# Also masks bearer and apikey header values and bare JWTs, the forms the service role key travels in.
 def redact(text):
-    return SECRET_PATTERN.sub(lambda match: match.group(1) + REDACTED_VALUE, text)
+    text = SECRET_PATTERN.sub(lambda match: match.group(1) + REDACTED_VALUE, text)
+    return CREDENTIAL_PATTERN.sub(lambda match: (match.group(1) or "") + REDACTED_VALUE, text)
 
 # Installs the application handler on the root logger once, leaving other handlers in place.
 def configureLogging(level=logging.INFO):

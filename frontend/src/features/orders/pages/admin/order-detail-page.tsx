@@ -9,6 +9,7 @@ import { ApiError } from "@/lib/api-client";
 import { failureMessage } from "@/lib/failure-message";
 import { AssignTechnician } from "../../components/assign-technician";
 import { AttachmentList } from "../../components/attachment-list";
+import { CompletionDetails } from "../../components/completion-details";
 import { EventTimeline } from "../../components/event-timeline";
 import { ErrorState, LoadingState } from "../../components/list-states";
 import { NotificationList } from "../../components/notification-list";
@@ -28,7 +29,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-// Order page for admins and managers: summary, technician, WhatsApp messages, and activity, with edit and assign for
+// Order page for admins and managers: summary, technician, completion, files, WhatsApp messages, and activity, with edit and assign for
 // admins and review and close for managers.
 export function OrderDetailPage() {
   const { orderId = "" } = useParams();
@@ -76,6 +77,11 @@ export function OrderDetailPage() {
       {isAdmin && editable ? (
         <Section title="Technician">
           <AssignTechnician key={order.technician?.userId ?? "none"} order={order} />
+        </Section>
+      ) : null}
+      {(FINISHED_JOB_STATUSES as readonly string[]).includes(order.status) ? (
+        <Section title="Completion">
+          <CompletionDetails orderId={order.orderId} />
         </Section>
       ) : null}
       {(FINISHED_JOB_STATUSES as readonly string[]).includes(order.status) ? (

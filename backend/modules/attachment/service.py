@@ -168,9 +168,10 @@ def verifyForCompletion(actor, order, completionIds, receiptId):
     return verified, None
 
 # Marks the verified files uploaded inside the completion transaction, with the size and type storage reported.
+# Returns NOT_UPLOADED when a file was removed after verification, so the caller can roll everything back.
 def confirm(conn, verified, actor):
-    for attachmentId, info in verified.items():
-        repository.confirm(attachmentId, info["sizeBytes"], info["contentType"], actor.email, conn)
+    confirmed = sum(repository.confirm(attachmentId, info["sizeBytes"], info["contentType"], actor.email, conn) for attachmentId, info in verified.items())
+    return NOT_UPLOADED if confirmed != len(verified) else None
 
 # Lists an order's files for anyone who may see it: uploaded files with short-lived view links signed in one call,
 # and for the assigned technician their pending files too, so an upload in progress survives a reload.

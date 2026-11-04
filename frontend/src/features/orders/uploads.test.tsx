@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { FakeXhr } from "@/test-support/fake-xhr";
 import { mockBackend } from "@/test-support/mock-backend";
 import { AttachmentList } from "./components/attachment-list";
 import { FileUploader } from "./components/file-uploader";
@@ -12,48 +13,6 @@ const ORDER_ID = "55555555-5555-4555-8555-555555555555";
 const ATTACHMENT_ID = "88888888-8888-4888-8888-888888888888";
 const UPLOAD_URL = "https://storage.test/upload/orders/x.jpg?token=t";
 const MEGABYTE = 1024 * 1024;
-
-class FakeXhr {
-  static instances: FakeXhr[] = [];
-  upload: { onprogress: ((event: { lengthComputable: boolean; loaded: number; total: number }) => void) | null } = { onprogress: null };
-  onload: (() => void) | null = null;
-  onerror: (() => void) | null = null;
-  onabort: (() => void) | null = null;
-  status = 0;
-  url = "";
-  headers: Record<string, string> = {};
-
-  // Records the target URL.
-  open(_method: string, url: string) {
-    this.url = url;
-  }
-
-  // Records one request header.
-  setRequestHeader(name: string, value: string) {
-    this.headers[name] = value;
-  }
-
-  // Registers the request so a test can drive it.
-  send() {
-    FakeXhr.instances.push(this);
-  }
-
-  // Simulates the browser cancelling the upload.
-  abort() {
-    this.onabort?.();
-  }
-
-  // Reports upload progress.
-  progress(loaded: number, total: number) {
-    this.upload.onprogress?.({ lengthComputable: true, loaded, total });
-  }
-
-  // Finishes the upload with a status.
-  respond(status: number) {
-    this.status = status;
-    this.onload?.();
-  }
-}
 
 // Renders the uploader for one kind with its upload state.
 function Harness({ kind = "completion", existing = [] }: { kind?: "completion" | "receipt"; existing?: Attachment[] }) {

@@ -143,9 +143,14 @@ def queueAssignedNotification(conn, actor, order, requestId):
         },
         requestId, actor.email,
     )
-    recordEvent(conn, order["service_order_id"], EVENT_NOTIFICATION_QUEUED, actor, requestId,
-                detail={"notificationId": str(notification["notification_id"]), "notificationType": TYPE_JOB_ASSIGNED})
+    recordNotificationQueued(conn, actor, order["service_order_id"], notification, requestId)
     return notification
+
+# Records on the order's timeline that a notification was queued, in the caller's transaction; other modules that
+# queue a notification for an order call this instead of writing order events themselves.
+def recordNotificationQueued(conn, actor, orderId, notification, requestId):
+    recordEvent(conn, orderId, EVENT_NOTIFICATION_QUEUED, actor, requestId,
+                detail={"notificationId": str(notification["notification_id"]), "notificationType": notification["notification_type"]})
 
 # Returns the notification response for a queued row, or None.
 def presentNotification(actor, row):
@@ -311,9 +316,11 @@ __all__ = [
     "closeOrder",
     "createOrder",
     "getOrder",
+    "invalidTransition",
     "listOrders",
     "markJobDone",
     "presentOrder",
+    "recordNotificationQueued",
     "reviewOrder",
     "startJob",
     "updateOrder",

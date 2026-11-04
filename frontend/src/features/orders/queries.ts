@@ -3,7 +3,7 @@ import { useRef } from "react";
 import * as api from "./api";
 import type { OrderListFilters } from "./filters";
 import { hasQueued, POLL_INTERVAL_MS, PREPARE_TIMEOUT_MS, type NotificationFilters } from "./notifications";
-import type { NotificationList, OrderWithNotification, UpdateOrderPayload } from "./schemas";
+import type { NotificationList, OrderDetail, OrderWithNotification, SubmitCompletionPayload, SubmitCompletionResult, UpdateOrderPayload } from "./schemas";
 
 const SERVICE_TYPES_STALE_MS = 10 * 60 * 1000;
 const SENDABLE_COUNT_FILTERS: NotificationFilters = { sendable: true, pageSize: 1 };
@@ -51,10 +51,11 @@ export function useTechnicians(enabled = true) {
   return useQuery({ queryKey: orderKeys.technicians(), queryFn: ({ signal }) => api.listTechnicians(signal), enabled });
 }
 
-// Refreshes everything one order change can affect: its detail, every list, and every notification list.
+// Refreshes everything one order change can affect: its detail, every list, and every notification list. The detail
+// match is exact so its completion and attachments, which only a completion changes, are not refetched and re-signed.
 function invalidateOrder(queryClient: QueryClient, orderId: string) {
   return Promise.all([
-    queryClient.invalidateQueries({ queryKey: orderKeys.detail(orderId) }),
+    queryClient.invalidateQueries({ queryKey: orderKeys.detail(orderId), exact: true }),
     queryClient.invalidateQueries({ queryKey: orderKeys.lists() }),
     queryClient.invalidateQueries({ queryKey: orderKeys.notificationsAll() }),
   ]);
@@ -148,5 +149,40 @@ export function useAttachments(orderId: string, enabled = true) {
     queryFn: ({ signal }) => api.listAttachments(orderId, signal),
     staleTime: ATTACHMENTS_STALE_MS,
     enabled,
+  });
+}
+
+// Reads an order's completion record; callers enable it only from job_done onwards, since earlier it does not exist.
+export function useCompletion(orderId: string, enabled = true) {
+  return useQuery({ queryKey: orderKeys.completion(orderId), queryFn: ({ signal }) => api.getCompletion(orderId, signal), enabled });
+}
+
+// Seeds the caches with a submitted completion: the record, the job_done order, and the queued customer notification
+// at the top of the order's notification list, so the result panel shows at once while the refetch runs.
+function seedCompletion(queryClient: QueryClient, orderId: string, result: SubmitCompletionResult) {
+  queryClient.setQueryData(orderKeys.completion(orderId), result.completion);
+  queryClient.setQueryData<OrderDetail>(orderKeys.detail(orderId), (current) => (current ? { ...current, order: result.order } : current));
+  const notification = result.notification;
+  if (!notification) return;
+  queryClient.setQueryData<NotificationList>(orderKeys.notifications({ orderId }), (current) => {
+    const others = (current?.items ?? []).filter((item) => item.notificationId !== notification.notificationId);
+    return { items: [notification, ...others], total: others.length + 1, page: current?.page ?? 1, pageSize: current?.pageSize ?? 20 };
+  });
+}
+
+// Submits the completion; never retried, since a second submit would only meet a 409. On success it seeds the
+// caches, then refreshes the order, lists, notifications, and files.
+export function useSubmitCompletion(orderId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: SubmitCompletionPayload) => api.submitCompletion(orderId, payload),
+    retry: false,
+    onSuccess: async (result) => {
+      seedCompletion(queryClient, orderId, result);
+      await Promise.all([
+        invalidateOrder(queryClient, orderId),
+        queryClient.invalidateQueries({ queryKey: orderKeys.attachments(orderId) }),
+      ]);
+    },
   });
 }
