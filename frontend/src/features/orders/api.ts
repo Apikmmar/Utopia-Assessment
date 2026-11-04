@@ -1,7 +1,12 @@
 import { apiRequest } from "@/lib/api-client";
+import type { AttachmentKind } from "./attachments";
 import type { OrderListFilters } from "./filters";
 import type { NotificationFilters } from "./notifications";
 import {
+  attachmentListSchema,
+  uploadResponseSchema,
+  type Attachment,
+  type UploadTicket,
   notificationEnvelopeSchema,
   notificationListSchema,
   orderDetailSchema,
@@ -88,4 +93,40 @@ export async function changeStatus(orderId: string, action: "start" | "review" |
 export async function listTechnicians(signal?: AbortSignal): Promise<Technician[]> {
   const body = await apiRequest("/users", { query: { roleCode: "technician", pageSize: 100 }, signal });
   return technicianListSchema.parse(body).items;
+}
+
+export type UploadRequestPayload = { kind: AttachmentKind; fileName: string; contentType: string; sizeBytes: number };
+
+// Records a pending file on the job and returns it with the signed URL the browser uploads to.
+export async function requestUpload(orderId: string, payload: UploadRequestPayload): Promise<UploadTicket> {
+  const body = await apiRequest(`/orders/${encodeURIComponent(orderId)}/attachments`, { method: "POST", body: payload });
+  return uploadResponseSchema.parse(body);
+}
+
+// Removes a pending file from the job.
+export async function deleteAttachment(orderId: string, attachmentId: string): Promise<void> {
+  await apiRequest(`/orders/${encodeURIComponent(orderId)}/attachments/${encodeURIComponent(attachmentId)}`, { method: "DELETE" });
+}
+
+// Fetches an order's files with short-lived view links.
+export async function listAttachments(orderId: string, signal?: AbortSignal): Promise<Attachment[]> {
+  return attachmentListSchema.parse(await apiRequest(`/orders/${encodeURIComponent(orderId)}/attachments`, { signal })).items;
+}
+
+// Uploads a file straight to storage with a signed URL, reporting progress from 0 to 1; rejects on failure or abort.
+export function uploadFile(uploadUrl: string, file: Blob, contentType: string, onProgress: (fraction: number) => void, signal?: AbortSignal) {
+  return new Promise<void>((resolve, reject) => {
+    const request = new XMLHttpRequest();
+    request.open("PUT", uploadUrl);
+    request.setRequestHeader("Content-Type", contentType);
+    request.setRequestHeader("x-upsert", "false");
+    request.upload.onprogress = (event) => {
+      if (event.lengthComputable) onProgress(event.loaded / event.total);
+    };
+    request.onload = () => (request.status >= 200 && request.status < 300 ? resolve() : reject(new Error(`Upload failed with status ${request.status}`)));
+    request.onerror = () => reject(new Error("Upload failed"));
+    request.onabort = () => reject(new DOMException("Upload aborted", "AbortError"));
+    signal?.addEventListener("abort", () => request.abort(), { once: true });
+    request.send(file);
+  });
 }

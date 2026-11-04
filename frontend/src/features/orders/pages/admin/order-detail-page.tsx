@@ -8,6 +8,7 @@ import { useMe } from "@/features/auth/queries";
 import { ApiError } from "@/lib/api-client";
 import { failureMessage } from "@/lib/failure-message";
 import { AssignTechnician } from "../../components/assign-technician";
+import { AttachmentList } from "../../components/attachment-list";
 import { EventTimeline } from "../../components/event-timeline";
 import { ErrorState, LoadingState } from "../../components/list-states";
 import { NotificationList } from "../../components/notification-list";
@@ -15,7 +16,7 @@ import { OrderSummary } from "../../components/order-summary";
 import { StatusActions } from "../../components/status-actions";
 import { StatusBadge } from "../../components/status-badge";
 import { useOrder } from "../../queries";
-import { EDITABLE_STATUSES } from "../../statuses";
+import { EDITABLE_STATUSES, FINISHED_JOB_STATUSES } from "../../statuses";
 
 // One titled card section of the order page.
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -75,6 +76,11 @@ export function OrderDetailPage() {
       {isAdmin && editable ? (
         <Section title="Technician">
           <AssignTechnician key={order.technician?.userId ?? "none"} order={order} />
+        </Section>
+      ) : null}
+      {(FINISHED_JOB_STATUSES as readonly string[]).includes(order.status) ? (
+        <Section title="Files">
+          <AttachmentList orderId={order.orderId} />
         </Section>
       ) : null}
       <Section title="WhatsApp messages">

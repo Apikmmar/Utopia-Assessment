@@ -1,4 +1,6 @@
+import threading
 from sqlalchemy import text
+from core.storage import StorageUnavailable
 from modules.notification import service as notificationService
 from modules.notification.constants import RECIPIENT_CUSTOMER, RECIPIENT_TECHNICIAN, TYPE_JOB_ASSIGNED, TYPE_JOB_DONE
 
@@ -43,3 +45,56 @@ def queueDone(engine, orderId, orderNo, technicianId, technicianName="Tom Tech")
             {"orderNo": orderNo, "customerName": CUSTOMER_NAME, "technicianName": technicianName, "completedAt": COMPLETED_AT},
             "req-done", "tech@example.com",
         )
+
+JPEG_BYTES = b"\xff\xd8\xff\xe0" + b"\x00" * 60
+PNG_BYTES = b"\x89PNG\r\n\x1a\n" + b"\x00" * 60
+PDF_BYTES = b"%PDF-1.7\n" + b"\x00" * 60
+MP4_BYTES = b"\x00\x00\x00\x18ftypmp42" + b"\x00" * 60
+
+
+class FakeStorage:
+    # An in-memory stand-in for the storage client; uploads are simulated with put, and down makes every call fail.
+    def __init__(self):
+        self.objects = {}
+        self.deleted = []
+        self.down = False
+        self.lock = threading.Lock()
+
+    # Raises StorageUnavailable while the fake is marked down.
+    def check(self):
+        if self.down:
+            raise StorageUnavailable("fake storage down")
+
+    # Simulates the browser uploading bytes to a signed URL.
+    def put(self, path, content, contentType):
+        with self.lock:
+            self.objects[path] = (content, contentType)
+
+    # Returns a fake signed upload URL for the path.
+    def signUpload(self, path):
+        self.check()
+        return f"https://storage.test/upload/{path}?token=t"
+
+    # Returns one fake signed view URL per path.
+    def signViews(self, paths, expiresIn):
+        self.check()
+        return [f"https://storage.test/view/{path}?expires={expiresIn}" for path in paths]
+
+    # Returns the stored size and type, or None when nothing was uploaded.
+    def objectInfo(self, path):
+        self.check()
+        stored = self.objects.get(path)
+        return None if stored is None else {"sizeBytes": len(stored[0]), "contentType": stored[1]}
+
+    # Returns the first bytes of a stored object, or None.
+    def readHead(self, path, length):
+        self.check()
+        stored = self.objects.get(path)
+        return None if stored is None else stored[0][:length]
+
+    # Deletes an object, ignoring a missing one.
+    def deleteObject(self, path):
+        self.check()
+        with self.lock:
+            self.objects.pop(path, None)
+            self.deleted.append(path)

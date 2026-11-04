@@ -138,3 +138,15 @@ export function useRetryNotification() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: orderKeys.notificationsAll() }),
   });
 }
+
+const ATTACHMENTS_STALE_MS = 4 * 60 * 1000;
+
+// Reads an order's files; view links expire after five minutes, so the list goes stale after four.
+export function useAttachments(orderId: string, enabled = true) {
+  return useQuery({
+    queryKey: orderKeys.attachments(orderId),
+    queryFn: ({ signal }) => api.listAttachments(orderId, signal),
+    staleTime: ATTACHMENTS_STALE_MS,
+    enabled,
+  });
+}

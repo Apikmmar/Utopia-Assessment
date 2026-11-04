@@ -20,7 +20,10 @@ TEST_DATABASE_URL = "TEST_DATABASE_URL"
 TEST_DATABASE_PASSWORD = "TEST_DATABASE_PASSWORD"
 SCHEMA_PREFIX = "utopia_test_"
 QUARANTINE_SCHEMA = SCHEMA_PREFIX + "none"
-DEFAULTED_SETTINGS = ("AUTH_SESSION_HOURS", "AUTH_COOKIE_NAME", "AUTH_ARGON2_MEMORY_KIB", "AUTH_ARGON2_ITERATIONS")
+DEFAULTED_SETTINGS = (
+    "AUTH_SESSION_HOURS", "AUTH_COOKIE_NAME", "AUTH_ARGON2_MEMORY_KIB", "AUTH_ARGON2_ITERATIONS",
+    "STORAGE_BUCKET", "STORAGE_VIEW_URL_SECONDS", "WORKER_POLL_SECONDS", "WORKER_EMBEDDED",
+)
 TEST_POOL_SIZE = 3
 TEST_MAX_OVERFLOW = 5
 
@@ -146,3 +149,12 @@ def app():
 @pytest.fixture
 def loggedIn(app):
     return partial(loginClient, app)
+
+# Replaces the storage client with an in-memory fake; tests using it are labelled as mocked storage.
+@pytest.fixture
+def fakeStorage(monkeypatch):
+    from core import storage as coreStorage
+    from tests.order_support import FakeStorage
+    fake = FakeStorage()
+    monkeypatch.setattr(coreStorage, "getStorage", lambda: fake)
+    return fake

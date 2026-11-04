@@ -93,6 +93,15 @@ class StorageClient:
             raise StorageUnavailable("object_info incomplete")
         return {"sizeBytes": int(size), "contentType": contentType}
 
+    # Returns the first bytes of a stored object through a range request, or None when the object does not exist.
+    def readHead(self, path, length):
+        response = self.send("read_head", "GET", f"/object/authenticated/{self.objectPath(path)}", headers={"Range": f"bytes=0-{length - 1}"})
+        if self.isNotFound(response):
+            return None
+        if not response.is_success:
+            self.expectJson("read_head", response)
+        return response.content[:length]
+
     # Deletes one object; a missing object is ignored.
     def deleteObject(self, path):
         response = self.send("delete_object", "DELETE", f"/object/{quote(self.bucket, safe='')}", json={"prefixes": [path]})

@@ -25,7 +25,7 @@ export class ApiError extends Error {
 }
 
 export type RequestOptions = {
-  method?: "GET" | "POST" | "PATCH";
+  method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
   query?: Record<string, string | number | readonly string[] | undefined>;
   signal?: AbortSignal;

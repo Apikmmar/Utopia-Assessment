@@ -109,3 +109,13 @@ def testGetStorageWithoutSettingsRaises(monkeypatch):
     monkeypatch.setattr(coreStorage, "_client", None)
     with pytest.raises(StorageUnavailable):
         coreStorage.getStorage()
+
+# Reading a file's first bytes sends a range request to the authenticated object path, and a missing object is None.
+def testReadHeadUsesRangeRequest():
+    recorder = Recorder(lambda request: httpx.Response(206, content=b"\xff\xd8\xff\xe0rest"))
+    assert clientFor(recorder).readHead(PATH, 4) == b"\xff\xd8\xff\xe0"
+    request = recorder.requests[0]
+    assert (request.url.path, request.headers["Range"]) == (f"/storage/v1/object/authenticated/{BUCKET}/{PATH}", "bytes=0-3")
+    assert clientFor(Recorder(lambda request: httpx.Response(404, json={"error": "not_found"}))).readHead(PATH, 4) is None
+    with pytest.raises(StorageUnavailable):
+        clientFor(Recorder(lambda request: httpx.Response(500, json={}))).readHead(PATH, 4)

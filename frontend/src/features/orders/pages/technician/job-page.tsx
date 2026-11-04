@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { TextLink } from "@/components/ui/text-link";
 import { ApiError } from "@/lib/api-client";
 import { failureMessage } from "@/lib/failure-message";
+import { AttachmentList } from "../../components/attachment-list";
 import { ErrorState, LoadingState } from "../../components/list-states";
 import { NotificationList } from "../../components/notification-list";
 import { StatusActions } from "../../components/status-actions";
@@ -12,6 +13,7 @@ import { StatusBadge } from "../../components/status-badge";
 import { formatMyr } from "../../money";
 import { formatDateTime } from "../../notifications";
 import { useOrder } from "../../queries";
+import { FINISHED_JOB_STATUSES } from "../../statuses";
 
 const MAPS_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query=";
 
@@ -74,6 +76,12 @@ export function JobPage() {
       {order.status === "assigned" ? (
         <div className="fixed inset-x-0 bottom-0 z-10 border-t border-border bg-card/95 p-4 backdrop-blur sm:static sm:border-0 sm:bg-transparent sm:p-0">
           <StatusActions order={order} roleCode="technician" className="min-h-11 w-full" />
+        </div>
+      ) : null}
+      {(FINISHED_JOB_STATUSES as readonly string[]).includes(order.status) ? (
+        <div className="flex flex-col gap-3">
+          <h2 className="text-base font-semibold">Files</h2>
+          <AttachmentList orderId={order.orderId} />
         </div>
       ) : null}
       <div className="flex flex-col gap-3">

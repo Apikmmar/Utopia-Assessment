@@ -151,3 +151,19 @@ export type CreateOrderPayload = {
 };
 
 export type UpdateOrderPayload = Partial<Omit<CreateOrderPayload, "technicianId" | "adminNotes">> & { adminNotes?: string | null };
+
+export const attachmentSchema = z.object({
+  attachmentId: z.string(),
+  kind: z.string(),
+  fileName: z.string(),
+  contentType: z.string(),
+  sizeBytes: z.number(),
+  status: z.string(),
+  viewUrl: z.string().nullable(),
+});
+
+export const attachmentListSchema = z.object({ items: z.array(attachmentSchema) });
+export const uploadResponseSchema = z.object({ attachment: attachmentSchema, uploadUrl: z.string() });
+
+export type Attachment = z.infer<typeof attachmentSchema>;
+export type UploadTicket = z.infer<typeof uploadResponseSchema>;
