@@ -1,6 +1,6 @@
 import threading
 from psycopg.errors import UniqueViolation
-from sqlalchemy import CHAR, TIMESTAMP, Boolean, Column, ForeignKey, Integer, MetaData, SmallInteger, String, Table, Text, UniqueConstraint, create_engine, event, text
+from sqlalchemy import CHAR, TIMESTAMP, BigInteger, Boolean, Column, ForeignKey, Integer, MetaData, Numeric, SmallInteger, String, Table, Text, UniqueConstraint, create_engine, event, text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.exc import IntegrityError as ConflictError, SQLAlchemyError as DatabaseError
 from core import config
@@ -113,6 +113,117 @@ settingTable = Table(
     Column("setting_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
     Column("setting_key", String(100), nullable=False, unique=True), Column("setting_value", Text, nullable=False),
     Column("value_type", String(20), nullable=False, server_default=text("'string'")), Column("description", Text),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
+serviceTypeTable = Table(
+    "service_type", meta,
+    Column("service_type_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("service_type_code", String(30), nullable=False, unique=True), Column("service_type_name", String(50), nullable=False),
+    Column("sort_order", SmallInteger, nullable=False, server_default=text("0")),
+    Column("is_active", Boolean, nullable=False, server_default=text("true")),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
+serviceOrderTable = Table(
+    "service_order", meta,
+    Column("service_order_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("order_no", String(20), nullable=False, unique=True, server_default=text("next_service_order_no()")),
+    Column("customer_name", String(100), nullable=False), Column("customer_phone", String(20), nullable=False),
+    Column("address", String(500), nullable=False), Column("problem_description", String(2000), nullable=False),
+    Column("service_type_id", UUID(as_uuid=True), ForeignKey("service_type.service_type_id", ondelete="RESTRICT"), nullable=False, index=True),
+    Column("quoted_price", Numeric(10, 2), nullable=False),
+    Column("assigned_technician_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT")),
+    Column("admin_notes", String(2000)),
+    Column("status", String(20), nullable=False),
+    Column("status_changed_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("started_at", TIMESTAMP(timezone=True)), Column("job_done_at", TIMESTAMP(timezone=True)),
+    Column("reviewed_at", TIMESTAMP(timezone=True)),
+    Column("reviewed_by_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT")),
+    Column("closed_at", TIMESTAMP(timezone=True)),
+    Column("closed_by_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT")),
+    Column("created_by_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT"), nullable=False),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
+orderAttachmentTable = Table(
+    "order_attachment", meta,
+    Column("order_attachment_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("service_order_id", UUID(as_uuid=True), ForeignKey("service_order.service_order_id", ondelete="RESTRICT"), nullable=False),
+    Column("kind", String(20), nullable=False),
+    Column("storage_path", String(300), nullable=False, unique=True), Column("file_name", String(255), nullable=False),
+    Column("content_type", String(100), nullable=False), Column("size_bytes", BigInteger, nullable=False),
+    Column("status", String(20), nullable=False, server_default=text("'pending'")),
+    Column("uploaded_by_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT"), nullable=False),
+    Column("confirmed_at", TIMESTAMP(timezone=True)),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
+orderCompletionTable = Table(
+    "order_completion", meta,
+    Column("order_completion_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("service_order_id", UUID(as_uuid=True), ForeignKey("service_order.service_order_id", ondelete="RESTRICT"), nullable=False, unique=True),
+    Column("technician_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT"), nullable=False),
+    Column("work_done", String(2000), nullable=False),
+    Column("quoted_price", Numeric(10, 2), nullable=False),
+    Column("extra_charges", Numeric(10, 2), nullable=False, server_default=text("0")),
+    Column("final_amount", Numeric(10, 2), nullable=False),
+    Column("remarks", String(2000)),
+    Column("payment_amount", Numeric(10, 2)), Column("payment_method", String(20)),
+    Column("receipt_attachment_id", UUID(as_uuid=True), ForeignKey("order_attachment.order_attachment_id", ondelete="RESTRICT")),
+    Column("completed_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
+orderEventTable = Table(
+    "order_event", meta,
+    Column("order_event_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("service_order_id", UUID(as_uuid=True), ForeignKey("service_order.service_order_id", ondelete="RESTRICT"), nullable=False),
+    Column("event_type", String(40), nullable=False),
+    Column("from_status", String(20)), Column("to_status", String(20)),
+    Column("actor_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT"), nullable=False),
+    Column("request_id", String(100)),
+    Column("detail", JSONB, nullable=False, server_default=text("'{}'::jsonb")),
+    Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+)
+
+notificationTable = Table(
+    "notification", meta,
+    Column("notification_id", UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()")),
+    Column("service_order_id", UUID(as_uuid=True), ForeignKey("service_order.service_order_id", ondelete="RESTRICT"), nullable=False),
+    Column("notification_type", String(40), nullable=False),
+    Column("channel", String(20), nullable=False, server_default=text("'whatsapp'")),
+    Column("provider", String(30), nullable=False, server_default=text("'deeplink'")),
+    Column("recipient_type", String(20), nullable=False),
+    Column("recipient_user_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT")),
+    Column("recipient_name", String(100), nullable=False), Column("recipient_phone", String(20), nullable=False),
+    Column("order_no", String(20), nullable=False),
+    Column("sender_user_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT")),
+    Column("template_data", JSONB, nullable=False),
+    Column("message", String(4000)), Column("deep_link", String(8000)),
+    Column("status", String(20), nullable=False, server_default=text("'queued'")),
+    Column("job_id", UUID(as_uuid=True), ForeignKey("job.job_id", ondelete="RESTRICT"), index=True),
+    Column("provider_message_id", String(100)), Column("error_message", String(500)),
+    Column("ready_at", TIMESTAMP(timezone=True)), Column("opened_at", TIMESTAMP(timezone=True)),
+    Column("opened_by_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT")),
+    Column("sent_at", TIMESTAMP(timezone=True)),
+    Column("request_id", String(100)),
     Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
     Column("created_by", String(100), nullable=False, server_default=text("'System'")),
     Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),

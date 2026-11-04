@@ -5,7 +5,9 @@ from core.db import DatabaseError
 from db.migration import HISTORY_MIGRATION, acquireMigrationLock, applyPending, getHistory, loadMigrations, rollbackLatest
 from tests.support import schemaMigrations
 
-APPLICATION_TABLES = ("token_usage", "llm_model", "setting", "llm_invocation", "role", "user", "job", "session")
+APPLICATION_TABLES = ("token_usage", "llm_model", "setting", "llm_invocation", "role", "user", "job", "session",
+    "service_type", "service_order", "order_attachment", "order_completion", "order_event", "notification",
+)
 
 
 # One connection inside an outer transaction on the throwaway schema, rolled back afterwards.
