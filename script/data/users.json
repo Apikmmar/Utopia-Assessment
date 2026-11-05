@@ -1,0 +1,35 @@
+{
+  "description": "Mock users for development: one admin, one manager, and three technicians, all with the mock password. Loaded by script/seed_user.py.",
+  "users": [
+    {
+      "name": "Admin",
+      "email": "admin@utopia.com",
+      "phone": null,
+      "role": "admin"
+    },
+    {
+      "name": "Manager",
+      "email": "manager@utopia.com",
+      "phone": null,
+      "role": "manager"
+    },
+    {
+      "name": "Ali",
+      "email": "ali@utopia.com",
+      "phone": "60123456781",
+      "role": "technician"
+    },
+    {
+      "name": "Bala",
+      "email": "bala@utopia.com",
+      "phone": "60123456782",
+      "role": "technician"
+    },
+    {
+      "name": "Chong",
+      "email": "chong@utopia.com",
+      "phone": "60123456783",
+      "role": "technician"
+    }
+  ]
+}

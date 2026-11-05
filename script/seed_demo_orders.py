@@ -9,20 +9,16 @@ BACKEND_DIRECTORY = str(Path(__file__).resolve().parents[1] / "backend")
 if BACKEND_DIRECTORY not in sys.path:
     sys.path.insert(0, BACKEND_DIRECTORY)
 
-from sqlalchemy import delete, exists, func, insert, select
+from sqlalchemy import delete, func, insert, select
 from sqlalchemy.engine import make_url
 from core import config
-from core.auth import ROLE_TECHNICIAN
-from core.crypto import hashPassword
 from core.db import (
     DatabaseError, notificationTable, orderAttachmentTable, orderCompletionTable, orderEventTable, serviceOrderTable, serviceTypeTable,
-    sessionTable, transaction, userTable,
+    transaction, userTable,
 )
-from modules.user import repository as userRepository
 
 DATA_FILE = Path(__file__).resolve().parent / "data" / "demo_orders.json"
 DEMO_ACTOR = "demo-seed"
-MOCK_PASSWORD = "P@ssword123"
 EXIT_OK = 0
 EXIT_FAILED = 1
 STATUS_STEPS = (
@@ -50,26 +46,12 @@ def loadData(path=DATA_FILE):
 def requireUser(conn, email):
     userId = conn.execute(select(userTable.c.user_id).where(userTable.c.email == email)).scalar()
     if userId is None:
-        raise SeedError(f"User {email} is missing; run script/seed_user.py first.")
+        raise SeedError(f"User {email} is missing; run script/seed_user.py --yes first.")
     return userId
 
-# Returns the technician ids by email, creating any demo technician that does not exist yet.
-def ensureTechnicians(conn, technicians):
-    role = userRepository.findActiveRole(ROLE_TECHNICIAN, conn=conn)
-    if role is None:
-        raise SeedError("The technician role is missing; apply the migrations first.")
-    ids = {}
-    passwordHash = None
-    for technician in technicians:
-        userId = conn.execute(select(userTable.c.user_id).where(userTable.c.email == technician["email"])).scalar()
-        if userId is None:
-            passwordHash = passwordHash or hashPassword(MOCK_PASSWORD)
-            userId = conn.execute(insert(userTable).values(
-                name=technician["name"], email=technician["email"], phone=technician["phone"], role_id=role["role_id"],
-                password_hash=passwordHash, created_by=DEMO_ACTOR, updated_by=DEMO_ACTOR,
-            ).returning(userTable.c.user_id)).scalar_one()
-        ids[technician["email"]] = userId
-    return ids
+# Returns the technician ids by email for every technician the orders name, raising when one is missing.
+def technicianIds(conn, orders):
+    return {email: requireUser(conn, email) for email in sorted({order["technician"] for order in orders})}
 
 # Returns the service type ids by code.
 def serviceTypeIds(conn):
@@ -139,32 +121,19 @@ def seedOrders(conn, data):
         return 0
     adminId = requireUser(conn, data["admin"])
     managerId = requireUser(conn, data["manager"])
-    technicianIds = ensureTechnicians(conn, data["technicians"])
+    technicians = technicianIds(conn, data["orders"])
     typeIds = serviceTypeIds(conn)
     for order in data["orders"]:
-        insertDemoOrder(conn, order, adminId, managerId, technicianIds, typeIds)
+        insertDemoOrder(conn, order, adminId, managerId, technicians, typeIds)
     return len(data["orders"])
 
-# Deletes the technicians this script created, with their sessions, unless real orders or events still name them.
-def removeDemoUsers(conn):
-    used = (
-        exists().where(serviceOrderTable.c.assigned_technician_id == userTable.c.user_id)
-        | exists().where(orderEventTable.c.actor_id == userTable.c.user_id)
-        | exists().where(orderCompletionTable.c.technician_id == userTable.c.user_id)
-    )
-    demoUsers = select(userTable.c.user_id).where(userTable.c.created_by == DEMO_ACTOR, ~used).scalar_subquery()
-    conn.execute(delete(sessionTable).where(sessionTable.c.user_id.in_(demoUsers)))
-    return conn.execute(delete(userTable).where(userTable.c.created_by == DEMO_ACTOR, ~used)).rowcount
-
-# Deletes every demo order with its events, completion, files, and notifications, then the demo technicians; returns
-# how many orders went. Stored files of demo orders are not deleted, since the demo data has none.
+# Deletes every demo order with its events, completion, files, and notifications, and returns how many orders went.
+# Users stay; script/seed_user.py --remove deletes them. Stored files are not deleted, since the demo data has none.
 def removeOrders(conn):
     ids = demoOrderIds(conn)
     for table in (orderEventTable, orderCompletionTable, notificationTable, orderAttachmentTable):
         conn.execute(delete(table).where(table.c.service_order_id.in_(ids)))
-    removed = conn.execute(delete(serviceOrderTable).where(serviceOrderTable.c.created_by == DEMO_ACTOR)).rowcount
-    removeDemoUsers(conn)
-    return removed
+    return conn.execute(delete(serviceOrderTable).where(serviceOrderTable.c.created_by == DEMO_ACTOR)).rowcount
 
 # Seeds or removes the demo orders from the command line and returns the process exit code.
 def main(argv=None):
@@ -196,4 +165,4 @@ def main(argv=None):
 if __name__ == "__main__":
     sys.exit(main())
 
-__all__ = ["DEMO_ACTOR", "loadData", "main", "orderEvents", "removeOrders", "seedOrders"]
+__all__ = ["DEMO_ACTOR", "SeedError", "loadData", "main", "orderEvents", "removeOrders", "seedOrders"]
