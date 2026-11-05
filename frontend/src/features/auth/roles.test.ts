@@ -19,8 +19,8 @@ describe("role registry", () => {
   });
 
   it("gives each role its own work screens and notifications", () => {
-    expect(navigationFor("admin").map((item) => item.label)).toEqual(["Orders", "Notifications", "Users"]);
+    expect(navigationFor("admin").map((item) => item.label)).toEqual(["Orders", "Performance", "Notifications", "Users"]);
     expect(navigationFor("technician").map((item) => item.label)).toEqual(["My jobs", "Notifications"]);
-    expect(navigationFor("manager").map((item) => item.label)).toEqual(["Review", "Orders", "Notifications"]);
+    expect(navigationFor("manager").map((item) => item.label)).toEqual(["Review", "Orders", "Performance", "Notifications"]);
   });
 });

@@ -1,5 +1,7 @@
+from datetime import timedelta
 from sqlalchemy import func
 from core.auth import ROLE_ADMIN, ROLE_MANAGER, ROLE_TECHNICIAN
+from core.businesstime import businessToday
 from core.db import transaction
 from core.error import (
     FORBIDDEN_CODE, INVALID_TECHNICIAN_CODE, INVALID_TRANSITION_CODE, ORDER_LOCKED_CODE, ORDER_NOT_FOUND_CODE, VALIDATION_FAILED_CODE,
@@ -13,8 +15,10 @@ from modules.notification.constants import RECIPIENT_TECHNICIAN, TYPE_JOB_ASSIGN
 from modules.order import repository
 from modules.order.constants import (
     ADDRESS_MAX_LENGTH, ADMIN_NOTES_MAX_LENGTH, ASSIGNABLE_STATUSES, CUSTOMER_NAME_MAX_LENGTH, EDITABLE_FIELDS, EDITABLE_STATUSES,
-    EVENT_ASSIGNED, EVENT_BY_STATUS, EVENT_CREATED, EVENT_EDITED, EVENT_NOTIFICATION_QUEUED, EVENT_REASSIGNED, INVALID_FIELDS_MESSAGE,
-    INVALID_TECHNICIAN_MESSAGE, ORDER_LOCKED_MESSAGE, ORDER_NOT_FOUND_MESSAGE, PROBLEM_MAX_LENGTH, SORT_NEWEST, STATUS_ASSIGNED,
+    EVENT_ASSIGNED, EVENT_BY_STATUS, EVENT_CREATED, EVENT_EDITED, EVENT_NOTIFICATION_QUEUED, EVENT_POSTPONED, EVENT_REASSIGNED,
+    INVALID_FIELDS_MESSAGE, INVALID_TECHNICIAN_MESSAGE, ORDER_LOCKED_MESSAGE, ORDER_NOT_FOUND_MESSAGE, POSTPONABLE_STATUSES,
+    POSTPONE_FAR_DATE_MESSAGE, POSTPONE_MAX_DAYS_AHEAD, POSTPONE_PAST_DATE_MESSAGE, POSTPONE_REASON_MESSAGE, POSTPONE_REASONS,
+    PROBLEM_MAX_LENGTH, SORT_NEWEST, STATUS_ASSIGNED,
     STATUS_CLOSED, STATUS_IN_PROGRESS, STATUS_JOB_DONE, STATUS_MESSAGE, STATUS_NEW, STATUS_REVIEWED, STEP_ACTOR_COLUMNS,
     STEP_TIMESTAMPS, TRANSITIONS,
 )
@@ -308,17 +312,55 @@ def reviewOrder(actor, orderId, requestId):
 def closeOrder(actor, orderId, requestId):
     return runTransition(actor, orderId, STATUS_REVIEWED, STATUS_CLOSED, requestId)
 
+# Returns the field errors of a postponement: the reason must be a known code, and the optional new date must be from
+# today to the limit ahead, in business time.
+def checkPostpone(reasonCode, newDate, today):
+    fields = {}
+    if reasonCode not in POSTPONE_REASONS:
+        fields["reasonCode"] = POSTPONE_REASON_MESSAGE
+    if newDate is not None and newDate < today:
+        fields["newDate"] = POSTPONE_PAST_DATE_MESSAGE
+    elif newDate is not None and newDate > today + timedelta(days=POSTPONE_MAX_DAYS_AHEAD):
+        fields["newDate"] = POSTPONE_FAR_DATE_MESSAGE
+    return fields
+
+# Records a postponed visit by the assigned technician or an admin while the order is assigned or in progress,
+# crediting the order's technician; the status does not change. Returns ({order}, error).
+def postponeOrder(actor, orderId, reasonCode, newDate, requestId, today=None):
+    if actor.roleCode not in (ROLE_ADMIN, ROLE_TECHNICIAN):
+        return None, NOT_ALLOWED
+    fields = checkPostpone(reasonCode, newDate, today or businessToday())
+    if fields:
+        return None, invalidFields(fields)
+    with transaction() as conn:
+        current, error = accessibleOrder(conn, actor, orderId, lock=True)
+        if error:
+            return None, error
+        status = current["status"]
+        if status not in POSTPONABLE_STATUSES:
+            return None, invalidTransition(status)
+        detail = {
+            "reasonCode": reasonCode, "newDate": newDate.isoformat() if newDate else None,
+            "technicianId": str(current["assigned_technician_id"]),
+        }
+        recordEvent(conn, orderId, EVENT_POSTPONED, actor, requestId, status, status, detail)
+        order = repository.getOrder(orderId, conn)
+    log.info("order_postponed order_id=%s actor_id=%s reason_code=%s", orderId, actor.userId, reasonCode)
+    return {"order": presentOrder(order)}, None
+
 
 __all__ = [
     "accessibleOrder",
     "assignTechnician",
     "canTransition",
+    "checkPostpone",
     "closeOrder",
     "createOrder",
     "getOrder",
     "invalidTransition",
     "listOrders",
     "markJobDone",
+    "postponeOrder",
     "presentOrder",
     "recordNotificationQueued",
     "reviewOrder",

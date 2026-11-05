@@ -5,6 +5,7 @@ export type NavItem = { to: string; label: string; showSendableCount?: boolean; 
 const NAV_BY_ROLE: Record<RoleCode, NavItem[]> = {
   admin: [
     { to: "/orders", label: "Orders" },
+    { to: "/kpi", label: "Performance" },
     { to: "/notifications", label: "Notifications", showSendableCount: true },
     { to: "/users", label: "Users" },
   ],
@@ -15,6 +16,7 @@ const NAV_BY_ROLE: Record<RoleCode, NavItem[]> = {
   manager: [
     { to: "/review", label: "Review" },
     { to: "/orders", label: "Orders" },
+    { to: "/kpi", label: "Performance" },
     { to: "/notifications", label: "Notifications" },
   ],
 };

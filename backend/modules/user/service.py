@@ -78,6 +78,10 @@ def technician(conn, userId):
         return None
     return {"user_id": row["user_id"], "name": row["name"], "phone": row["phone"]}
 
+# Returns every technician as {user_id, name}, ordered by name; reporting modules use it to list technicians with no work.
+def listTechnicians(conn=None):
+    return repository.listByRole(ROLE_TECHNICIAN, conn)
+
 # Validates the data, inserts the user as the actor, and returns (user, error). The password is
 # hashed with no connection held, and a duplicate email answers EMAIL_TAKEN.
 def createUser(actor, name, email, phone, age, roleCode, password):
@@ -159,6 +163,7 @@ __all__ = [
     "checkPhone",
     "createUser",
     "getUser",
+    "listTechnicians",
     "listUsers",
     "technician",
     "updateUser",

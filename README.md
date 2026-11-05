@@ -11,7 +11,11 @@ python -m db.migration --dry-run                          # preview pending migr
 python -m db.migration                                    # apply them
 python -m db.rollback --dry-run                           # preview reversing the latest one
 python script/seed_user.py                                # mock users: admin, manager, 2 technicians; password P@ssword123
+python script/seed_demo_orders.py --yes                   # KPI demo data from script/data/demo_orders.json (development only)
+python script/seed_demo_orders.py --yes --remove          # delete the demo orders again
 ```
+
+`seed_demo_orders.py` needs `seed_user.py` and migration `0016` first. It loads about five weeks of orders (28 Sep to 5 Nov 2026, Kuala Lumpur time) with completions and postponements, adds the technicians Chong and Devi with the mock password, and marks every order `created_by = 'demo-seed'`. A second run adds nothing. Without `--yes` it only prints the target host.
 
 ## Tests
 

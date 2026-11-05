@@ -3,6 +3,7 @@ import { ProtectedRoute } from "@/features/auth/components/protected-route";
 import { HomePage } from "@/features/auth/pages/home-page";
 import { LoginPage } from "@/features/auth/pages/login-page";
 import { ResetPasswordPage } from "@/features/auth/pages/reset-password-page";
+import { KpiDashboardPage } from "@/features/kpi/pages/kpi-dashboard-page";
 import { CreateOrderPage } from "@/features/orders/pages/admin/create-order-page";
 import { EditOrderPage } from "@/features/orders/pages/admin/edit-order-page";
 import { OrderDetailPage } from "@/features/orders/pages/admin/order-detail-page";
@@ -35,6 +36,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute roles={["admin", "manager"]} />}>
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/orders/:orderId" element={<OrderDetailPage />} />
+        <Route path="/kpi" element={<KpiDashboardPage />} />
       </Route>
       <Route element={<ProtectedRoute roles={["manager"]} />}>
         <Route path="/review" element={<ReviewQueuePage />} />

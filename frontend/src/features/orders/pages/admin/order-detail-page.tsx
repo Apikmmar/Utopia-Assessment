@@ -14,8 +14,10 @@ import { EventTimeline } from "../../components/event-timeline";
 import { ErrorState, LoadingState } from "../../components/list-states";
 import { NotificationList } from "../../components/notification-list";
 import { OrderSummary } from "../../components/order-summary";
+import { PostponeVisit } from "../../components/postpone-visit";
 import { StatusActions } from "../../components/status-actions";
 import { StatusBadge } from "../../components/status-badge";
+import { isPostponable } from "../../postpone";
 import { useOrder } from "../../queries";
 import { EDITABLE_STATUSES, FINISHED_JOB_STATUSES } from "../../statuses";
 
@@ -77,6 +79,11 @@ export function OrderDetailPage() {
       {isAdmin && editable ? (
         <Section title="Technician">
           <AssignTechnician key={order.technician?.userId ?? "none"} order={order} />
+        </Section>
+      ) : null}
+      {isAdmin && isPostponable(order.status) ? (
+        <Section title="Visit">
+          <PostponeVisit order={order} />
         </Section>
       ) : null}
       {(FINISHED_JOB_STATUSES as readonly string[]).includes(order.status) ? (

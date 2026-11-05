@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional, Union
 from uuid import UUID
 from pydantic import Field, StrictFloat, StrictInt, StrictStr
@@ -5,6 +6,7 @@ from core.schema import RequestModel
 from modules.order.constants import TEXT_INPUT_MAX_LENGTH
 
 PHONE_INPUT_MAX_LENGTH = 40
+REASON_CODE_MAX_LENGTH = 40
 AmountInput = Union[StrictInt, StrictFloat, StrictStr]
 
 
@@ -33,4 +35,9 @@ class AssignTechnicianRequest(RequestModel):
     technician_id: UUID
 
 
-__all__ = ["AssignTechnicianRequest", "CreateOrderRequest", "UpdateOrderRequest"]
+class PostponeRequest(RequestModel):
+    reason_code: str = Field(max_length=REASON_CODE_MAX_LENGTH)
+    new_date: Optional[date] = None
+
+
+__all__ = ["AssignTechnicianRequest", "CreateOrderRequest", "PostponeRequest", "UpdateOrderRequest"]

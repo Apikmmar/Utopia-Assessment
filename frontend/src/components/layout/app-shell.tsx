@@ -23,7 +23,7 @@ export function AppShell({ user, children }: AppShellProps) {
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-border bg-card/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-2 sm:px-6">
-          <nav aria-label="Main" className="flex items-center gap-1">
+          <nav aria-label="Main" className="flex flex-wrap items-center gap-1">
             <BrandMark className="mr-4" />
             {navItems.map((item) => (
               <NavLink

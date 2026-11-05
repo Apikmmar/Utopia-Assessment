@@ -7,13 +7,14 @@ from core.pagination import PageRequest, pageQuery, paginatedResponse
 from core.request_context import currentRequestId
 from modules.order import service
 from modules.order.constants import SEARCH_MAX_LENGTH
-from modules.order.schemas.request import AssignTechnicianRequest, CreateOrderRequest, UpdateOrderRequest
+from modules.order.schemas.request import AssignTechnicianRequest, CreateOrderRequest, PostponeRequest, UpdateOrderRequest
 from modules.order.schemas.response import OrderDetailResponse, OrderEnvelope, OrderListResponse, OrderWithNotification
 
 router = APIRouter(prefix="/orders", tags=["order"])
 requireAdmin = requireRole(ROLE_ADMIN)
 requireTechnician = requireRole(ROLE_TECHNICIAN)
 requireManager = requireRole(ROLE_MANAGER)
+requirePostponer = requireRole(ROLE_TECHNICIAN, ROLE_ADMIN)
 StatusFilter = Literal["new", "assigned", "in_progress", "job_done", "reviewed", "closed"]
 
 # Returns the service value, or raises the HTTP error for its refusal.
@@ -71,6 +72,11 @@ def reviewOrder(orderId: UUID, actor: AuthUser = Depends(requireManager)):
 @router.post("/{orderId}/close", response_model=OrderEnvelope)
 def closeOrder(orderId: UUID, actor: AuthUser = Depends(requireManager)):
     return unwrap(service.closeOrder(actor, orderId, currentRequestId()))
+
+# The assigned technician or an admin records a postponed visit; the status does not change.
+@router.post("/{orderId}/postpone", response_model=OrderEnvelope)
+def postponeOrder(orderId: UUID, body: PostponeRequest, actor: AuthUser = Depends(requirePostponer)):
+    return unwrap(service.postponeOrder(actor, orderId, body.reason_code, body.new_date, currentRequestId()))
 
 
 __all__ = ["router"]

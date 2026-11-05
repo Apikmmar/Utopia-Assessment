@@ -10,10 +10,12 @@ import { CompletionResult } from "../../components/completion-details";
 import { CompletionForm } from "../../components/completion-form";
 import { ErrorState, LoadingState } from "../../components/list-states";
 import { NotificationList } from "../../components/notification-list";
+import { PostponeVisit } from "../../components/postpone-visit";
 import { StatusActions } from "../../components/status-actions";
 import { StatusBadge } from "../../components/status-badge";
 import { formatMyr } from "../../money";
 import { formatDateTime } from "../../notifications";
+import { isPostponable } from "../../postpone";
 import { useAttachments, useOrder } from "../../queries";
 import type { Order } from "../../schemas";
 import { FINISHED_JOB_STATUSES } from "../../statuses";
@@ -89,6 +91,7 @@ export function JobPage() {
           <StatusActions order={order} roleCode="technician" className="min-h-11 w-full" />
         </div>
       ) : null}
+      {isPostponable(order.status) ? <PostponeVisit order={order} /> : null}
       {order.status === "in_progress" ? <CompletionSection order={order} /> : null}
       {(FINISHED_JOB_STATUSES as readonly string[]).includes(order.status) ? <CompletionResult orderId={order.orderId} /> : null}
       {(FINISHED_JOB_STATUSES as readonly string[]).includes(order.status) ? (

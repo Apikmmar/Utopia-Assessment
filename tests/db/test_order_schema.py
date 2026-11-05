@@ -11,6 +11,7 @@ ORDER_MIGRATIONS = (
     "0010_service_type.sql", "0011_service_order.sql", "0012_order_attachment.sql",
     "0013_order_completion.sql", "0014_order_event.sql", "0015_notification.sql",
 )
+LATER_MIGRATIONS = ("0016_order_event_postponed.sql",)
 ORDER_TABLES = ("service_type", "service_order", "order_attachment", "order_completion", "order_event", "notification")
 SEEDED_SERVICE_TYPES = ["cleaning", "repair", "gas_refill", "installation", "general_servicing"]
 CONCURRENT_ORDERS = 16
@@ -178,17 +179,17 @@ def testNotificationAcceptsValidRows(appDb, ids, orderId, execute, scalar):
     execute(insert, orderId=orderId, type="job_done", recipientType="customer", userId=None, status="ready", message="Hi", link="https://wa.me/60123456789")
     assert scalar("SELECT count(*) FROM notification") == 2
 
-# Rolling back the order migrations removes their tables, the order number function, and its sequence, then they reapply.
+# Rolling back the order migrations and the later ones that alter them removes their tables, the order number function, and its sequence, then they reapply.
 def testOrderMigrationsRollBackCleanly(testEngine, testSchema):
     migrations = schemaMigrations(testSchema)
     with testEngine.connect() as conn, conn.begin():
         applyPending(conn, migrations, schema=testSchema)
         rolledBack = []
-        for _ in ORDER_MIGRATIONS:
+        for _ in ORDER_MIGRATIONS + LATER_MIGRATIONS:
             rolledBack.extend(rollbackLatest(conn, migrations, schema=testSchema))
-        assert rolledBack == list(ORDER_MIGRATIONS[::-1])
+        assert rolledBack == list((ORDER_MIGRATIONS + LATER_MIGRATIONS)[::-1])
         assert all(conn.execute(text("SELECT to_regclass(:name)"), {"name": f"{testSchema}.{table}"}).scalar() is None for table in ORDER_TABLES)
         assert conn.execute(text("SELECT to_regclass(:name)"), {"name": f"{testSchema}.service_order_no_seq"}).scalar() is None
         assert conn.execute(text("SELECT to_regprocedure(:name)"), {"name": f"{testSchema}.next_service_order_no()"}).scalar() is None
         assert getHistory(conn, testSchema)[-1][0] == "0009_auth.sql"
-        assert applyPending(conn, migrations, schema=testSchema) == list(ORDER_MIGRATIONS)
+        assert applyPending(conn, migrations, schema=testSchema) == list(ORDER_MIGRATIONS + LATER_MIGRATIONS)

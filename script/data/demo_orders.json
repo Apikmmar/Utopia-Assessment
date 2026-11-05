@@ -1,0 +1,3293 @@
+{
+  "description": "Demo service orders for the KPI dashboard: about five weeks from 28 Sep 2026 to 5 Nov 2026, Kuala Lumpur time. Loaded by script/seed_demo_orders.py.",
+  "admin": "admin@utopia.com",
+  "manager": "manager@utopia.com",
+  "technicians": [
+    {
+      "name": "Ali",
+      "email": "ali@utopia.com",
+      "phone": "60123456781"
+    },
+    {
+      "name": "Bala",
+      "email": "bala@utopia.com",
+      "phone": "60123456782"
+    },
+    {
+      "name": "Chong",
+      "email": "chong@utopia.com",
+      "phone": "60123456783"
+    },
+    {
+      "name": "Devi",
+      "email": "devi@utopia.com",
+      "phone": "60123456784"
+    }
+  ],
+  "orders": [
+    {
+      "customerName": "Kumar Ng",
+      "customerPhone": "60138108122",
+      "address": "No 112, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "410.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-09-28T10:00:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-09-28T12:00:00+08:00",
+          "reasonCode": "other",
+          "newDate": "2026-10-01"
+        }
+      ],
+      "startedAt": "2026-10-01T14:40:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "410.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-01T16:45:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-02T18:45:00+08:00",
+      "closedAt": "2026-10-03T17:45:00+08:00"
+    },
+    {
+      "customerName": "Farid Lee",
+      "customerPhone": "60137335647",
+      "address": "No 15, Kepong, 52100 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "150.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-09-28T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-09-28T14:00:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "130.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-09-28T16:57:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-09-29T18:57:00+08:00",
+      "closedAt": "2026-09-30T17:57:00+08:00"
+    },
+    {
+      "customerName": "Jason Ng",
+      "customerPhone": "60134853883",
+      "address": "No 14, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "150.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-09-28T09:45:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-09-28T11:45:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-10-01"
+        }
+      ],
+      "startedAt": "2026-10-01T11:50:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-01T13:26:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-02T15:26:00+08:00",
+      "closedAt": "2026-10-03T14:26:00+08:00"
+    },
+    {
+      "customerName": "Nurul Lee",
+      "customerPhone": "60195225336",
+      "address": "No 67, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "240.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-09-28T09:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-09-28T13:30:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "20.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "260.00",
+          "method": "card"
+        },
+        "completedAt": "2026-09-28T15:23:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-09-29T17:23:00+08:00",
+      "closedAt": "2026-09-30T16:23:00+08:00"
+    },
+    {
+      "customerName": "Mei Ling Ng",
+      "customerPhone": "60158833256",
+      "address": "No 42, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "320.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-09-29T08:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-09-29T13:00:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "320.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-09-29T14:04:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-09-30T16:04:00+08:00",
+      "closedAt": "2026-10-01T15:04:00+08:00"
+    },
+    {
+      "customerName": "Jason Tan",
+      "customerPhone": "60149370981",
+      "address": "No 52, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "130.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-09-29T09:45:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-09-29T11:45:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-09-30"
+        }
+      ],
+      "startedAt": "2026-09-30T12:50:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "55.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "185.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-09-30T15:33:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-01T17:33:00+08:00",
+      "closedAt": "2026-10-02T16:33:00+08:00"
+    },
+    {
+      "customerName": "Kumar Rahman",
+      "customerPhone": "60146417362",
+      "address": "No 94, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "460.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-09-29T09:45:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-09-29T11:45:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-09-30"
+        },
+        {
+          "at": "2026-09-30T09:00:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-10-01"
+        }
+      ],
+      "startedAt": "2026-10-01T15:40:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "80.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-01T17:38:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-02T19:38:00+08:00",
+      "closedAt": "2026-10-03T18:38:00+08:00"
+    },
+    {
+      "customerName": "Wei Jie Hassan",
+      "customerPhone": "60169886329",
+      "address": "No 39, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "830.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-09-29T09:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-09-29T12:00:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "140.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "970.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-09-29T13:53:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-09-30T15:53:00+08:00",
+      "closedAt": "2026-10-01T14:53:00+08:00"
+    },
+    {
+      "customerName": "Raj Ng",
+      "customerPhone": "60174312124",
+      "address": "No 24, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "350.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-09-30T10:00:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-09-30T12:00:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-10-01"
+        }
+      ],
+      "startedAt": "2026-10-01T12:20:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "350.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-01T14:26:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-02T16:26:00+08:00",
+      "closedAt": "2026-10-03T15:26:00+08:00"
+    },
+    {
+      "customerName": "Aisyah Lim",
+      "customerPhone": "60155972538",
+      "address": "No 95, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "180.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-09-30T09:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-09-30T14:40:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "110.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-09-30T15:43:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-01T17:43:00+08:00",
+      "closedAt": "2026-10-02T16:43:00+08:00"
+    },
+    {
+      "customerName": "Hui Min Lee",
+      "customerPhone": "60185260357",
+      "address": "No 55, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "140.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-09-30T10:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-09-30T12:30:00+08:00",
+          "reasonCode": "other",
+          "newDate": "2026-10-03"
+        }
+      ],
+      "startedAt": "2026-10-03T13:20:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "140.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-03T14:53:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-04T16:53:00+08:00",
+      "closedAt": "2026-10-05T15:53:00+08:00"
+    },
+    {
+      "customerName": "Zarina Tan",
+      "customerPhone": "60135465030",
+      "address": "No 16, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "450.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-09-30T08:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-09-30T12:30:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "115.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "565.00",
+          "method": "card"
+        },
+        "completedAt": "2026-09-30T14:44:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-01T16:44:00+08:00",
+      "closedAt": "2026-10-02T15:44:00+08:00"
+    },
+    {
+      "customerName": "Mei Ling Lee",
+      "customerPhone": "60119147408",
+      "address": "No 6, Kepong, 52100 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "100.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-01T08:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-01T15:10:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "105.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "205.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-01T16:34:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-02T18:34:00+08:00",
+      "closedAt": "2026-10-03T17:34:00+08:00"
+    },
+    {
+      "customerName": "Kumar Kumar",
+      "customerPhone": "60116184990",
+      "address": "No 20, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "180.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-01T08:45:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-01T10:45:00+08:00",
+          "reasonCode": "weather",
+          "newDate": "2026-10-03"
+        }
+      ],
+      "startedAt": "2026-10-03T15:10:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-03T16:54:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-04T18:54:00+08:00",
+      "closedAt": "2026-10-05T17:54:00+08:00"
+    },
+    {
+      "customerName": "Aisyah Wong",
+      "customerPhone": "60169888752",
+      "address": "No 97, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "380.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-01T10:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-01T12:10:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "20.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "400.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-01T15:08:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-02T17:08:00+08:00",
+      "closedAt": "2026-10-03T16:08:00+08:00"
+    },
+    {
+      "customerName": "Wei Jie Hassan",
+      "customerPhone": "60176336368",
+      "address": "No 112, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "450.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-01T09:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-01T12:30:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "60.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-01T14:12:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-02T16:12:00+08:00",
+      "closedAt": "2026-10-03T15:12:00+08:00"
+    },
+    {
+      "customerName": "Kavitha Rahman",
+      "customerPhone": "60147680754",
+      "address": "No 61, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "250.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-02T08:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-02T15:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "250.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-02T17:39:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-03T19:39:00+08:00",
+      "closedAt": "2026-10-04T18:39:00+08:00"
+    },
+    {
+      "customerName": "Mei Ling Kumar",
+      "customerPhone": "60189623530",
+      "address": "No 119, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "150.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-02T10:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-02T15:10:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "80.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "230.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-02T16:47:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-03T18:47:00+08:00",
+      "closedAt": "2026-10-04T17:47:00+08:00"
+    },
+    {
+      "customerName": "Ahmad Rahman",
+      "customerPhone": "60173564182",
+      "address": "No 28, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "240.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-03T08:15:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-03T10:15:00+08:00",
+          "reasonCode": "parts_needed",
+          "newDate": "2026-10-05"
+        }
+      ],
+      "startedAt": "2026-10-05T11:00:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "125.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "365.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-05T12:00:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-06T14:00:00+08:00",
+      "closedAt": "2026-10-07T13:00:00+08:00"
+    },
+    {
+      "customerName": "Wei Jie Tan",
+      "customerPhone": "60187310383",
+      "address": "No 61, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "100.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-03T08:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-03T10:30:00+08:00",
+          "reasonCode": "customer_unavailable",
+          "newDate": "2026-10-06"
+        }
+      ],
+      "startedAt": "2026-10-06T13:40:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-06T16:20:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-07T18:20:00+08:00",
+      "closedAt": "2026-10-08T17:20:00+08:00"
+    },
+    {
+      "customerName": "Azlan Abdullah",
+      "customerPhone": "60118636154",
+      "address": "No 52, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "130.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-03T10:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-03T12:30:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "15.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "145.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-03T14:18:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-04T16:18:00+08:00",
+      "closedAt": "2026-10-05T15:18:00+08:00"
+    },
+    {
+      "customerName": "Aisyah Lee",
+      "customerPhone": "60182103193",
+      "address": "No 114, Kepong, 52100 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "190.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-05T08:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-05T13:10:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "190.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-05T14:16:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-06T16:16:00+08:00",
+      "closedAt": "2026-10-07T15:16:00+08:00"
+    },
+    {
+      "customerName": "Azlan Ng",
+      "customerPhone": "60145120069",
+      "address": "No 21, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "330.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-05T10:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-05T14:30:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "50.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-05T17:30:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-06T19:30:00+08:00",
+      "closedAt": "2026-10-07T18:30:00+08:00"
+    },
+    {
+      "customerName": "Zarina Wong",
+      "customerPhone": "60112921979",
+      "address": "No 7, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "390.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-05T10:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-05T14:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "80.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "470.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-05T16:30:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-06T18:30:00+08:00",
+      "closedAt": "2026-10-07T17:30:00+08:00"
+    },
+    {
+      "customerName": "Kavitha Lee",
+      "customerPhone": "60122761485",
+      "address": "No 62, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "130.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-05T09:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-05T13:50:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "130.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-05T16:29:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-06T18:29:00+08:00",
+      "closedAt": "2026-10-07T17:29:00+08:00"
+    },
+    {
+      "customerName": "Mei Ling Lim",
+      "customerPhone": "60113699725",
+      "address": "No 56, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "640.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-06T08:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-06T14:50:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "640.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-06T15:42:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-07T17:42:00+08:00",
+      "closedAt": "2026-10-08T16:42:00+08:00"
+    },
+    {
+      "customerName": "Wei Jie Wong",
+      "customerPhone": "60196592175",
+      "address": "No 92, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "180.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-06T08:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-06T13:20:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-06T14:35:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-07T16:35:00+08:00",
+      "closedAt": "2026-10-08T15:35:00+08:00"
+    },
+    {
+      "customerName": "Aisyah Wong",
+      "customerPhone": "60199978653",
+      "address": "No 18, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "180.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-06T09:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-06T14:30:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-06T15:57:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-07T17:57:00+08:00",
+      "closedAt": "2026-10-08T16:57:00+08:00"
+    },
+    {
+      "customerName": "Mei Ling Hassan",
+      "customerPhone": "60166350592",
+      "address": "No 71, Kepong, 52100 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "550.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-07T08:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-07T14:10:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-07T15:43:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-08T17:43:00+08:00",
+      "closedAt": "2026-10-09T16:43:00+08:00"
+    },
+    {
+      "customerName": "Priya Chong",
+      "customerPhone": "60185501506",
+      "address": "No 86, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "210.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-07T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-07T11:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-07T14:01:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-08T16:01:00+08:00",
+      "closedAt": "2026-10-09T15:01:00+08:00"
+    },
+    {
+      "customerName": "Siti Abdullah",
+      "customerPhone": "60184492927",
+      "address": "No 22, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "110.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-07T10:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-07T14:40:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "40.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "150.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-07T17:08:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-08T19:08:00+08:00",
+      "closedAt": "2026-10-09T18:08:00+08:00"
+    },
+    {
+      "customerName": "Farid Hassan",
+      "customerPhone": "60131231504",
+      "address": "No 119, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "210.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-07T08:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-07T14:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "210.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-07T16:59:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-08T18:59:00+08:00",
+      "closedAt": "2026-10-09T17:59:00+08:00"
+    },
+    {
+      "customerName": "Aisyah Lim",
+      "customerPhone": "60151879059",
+      "address": "No 60, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "200.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-07T09:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-07T14:00:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "200.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-07T15:37:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-08T17:37:00+08:00",
+      "closedAt": "2026-10-09T16:37:00+08:00"
+    },
+    {
+      "customerName": "Wei Jie Chong",
+      "customerPhone": "60157605619",
+      "address": "No 113, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "790.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-08T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-08T12:20:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "790.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-08T14:22:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-09T16:22:00+08:00",
+      "closedAt": "2026-10-10T15:22:00+08:00"
+    },
+    {
+      "customerName": "Mei Ling Abdullah",
+      "customerPhone": "60132636270",
+      "address": "No 53, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "450.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-08T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-08T12:50:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "120.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "570.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-08T14:36:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-09T16:36:00+08:00",
+      "closedAt": "2026-10-10T15:36:00+08:00"
+    },
+    {
+      "customerName": "Jason Rahman",
+      "customerPhone": "60196902827",
+      "address": "No 6, Kepong, 52100 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "440.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-08T08:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-08T13:40:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-08T14:48:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-09T16:48:00+08:00",
+      "closedAt": "2026-10-10T15:48:00+08:00"
+    },
+    {
+      "customerName": "Wei Jie Abdullah",
+      "customerPhone": "60183966756",
+      "address": "No 99, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "200.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-08T10:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-08T12:10:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-08T14:29:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-09T16:29:00+08:00",
+      "closedAt": "2026-10-10T15:29:00+08:00"
+    },
+    {
+      "customerName": "Priya Lee",
+      "customerPhone": "60154788391",
+      "address": "No 74, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "200.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-09T09:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-09T12:40:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "120.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-09T14:17:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-10T16:17:00+08:00",
+      "closedAt": "2026-10-11T15:17:00+08:00"
+    },
+    {
+      "customerName": "Nurul Tan",
+      "customerPhone": "60188241805",
+      "address": "No 32, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "330.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-09T10:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-09T12:30:00+08:00",
+          "reasonCode": "other",
+          "newDate": "2026-10-11"
+        }
+      ],
+      "startedAt": "2026-10-11T13:30:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "330.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-11T15:20:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-12T17:20:00+08:00",
+      "closedAt": "2026-10-13T16:20:00+08:00"
+    },
+    {
+      "customerName": "Kumar Ng",
+      "customerPhone": "60124795562",
+      "address": "No 32, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "120.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-09T10:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-09T11:10:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "120.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "240.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-09T12:08:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-10T14:08:00+08:00",
+      "closedAt": "2026-10-11T13:08:00+08:00"
+    },
+    {
+      "customerName": "Jason Kumar",
+      "customerPhone": "60192033663",
+      "address": "No 18, Kepong, 52100 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "170.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-09T08:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-09T14:30:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "170.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-09T15:43:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-10T17:43:00+08:00",
+      "closedAt": "2026-10-11T16:43:00+08:00"
+    },
+    {
+      "customerName": "Farid Muthu",
+      "customerPhone": "60176879125",
+      "address": "No 4, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "280.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-09T10:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-09T13:20:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "280.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-09T15:55:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-10T17:55:00+08:00",
+      "closedAt": "2026-10-11T16:55:00+08:00"
+    },
+    {
+      "customerName": "Farid Wong",
+      "customerPhone": "60153168420",
+      "address": "No 96, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "270.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-09T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-09T11:30:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "135.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-09T13:50:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-10T15:50:00+08:00",
+      "closedAt": "2026-10-11T14:50:00+08:00"
+    },
+    {
+      "customerName": "Siti Abdullah",
+      "customerPhone": "60172187456",
+      "address": "No 62, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "200.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-10T09:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-10T11:30:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "200.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-10T12:52:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-11T14:52:00+08:00",
+      "closedAt": "2026-10-12T13:52:00+08:00"
+    },
+    {
+      "customerName": "Kavitha Rahman",
+      "customerPhone": "60194267315",
+      "address": "No 73, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "790.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-10T10:15:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-10T12:15:00+08:00",
+          "reasonCode": "parts_needed",
+          "newDate": "2026-10-11"
+        }
+      ],
+      "startedAt": "2026-10-11T14:50:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "790.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-11T16:53:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-12T18:53:00+08:00",
+      "closedAt": "2026-10-13T17:53:00+08:00"
+    },
+    {
+      "customerName": "Raj Ng",
+      "customerPhone": "60155960225",
+      "address": "No 46, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "140.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-10T08:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-10T13:20:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "150.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "290.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-10T14:26:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-11T16:26:00+08:00",
+      "closedAt": "2026-10-12T15:26:00+08:00"
+    },
+    {
+      "customerName": "Hui Min Rahman",
+      "customerPhone": "60168318722",
+      "address": "No 31, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "300.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-10T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-10T15:30:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "120.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "420.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-10T16:23:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-11T18:23:00+08:00",
+      "closedAt": "2026-10-12T17:23:00+08:00"
+    },
+    {
+      "customerName": "Kumar Ismail",
+      "customerPhone": "60124464600",
+      "address": "No 85, Kepong, 52100 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "370.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-12T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-12T14:00:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "370.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-12T15:04:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-13T17:04:00+08:00",
+      "closedAt": "2026-10-14T16:04:00+08:00"
+    },
+    {
+      "customerName": "Ahmad Lee",
+      "customerPhone": "60113829938",
+      "address": "No 35, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "170.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-12T10:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-12T14:10:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "145.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-12T16:45:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-13T18:45:00+08:00",
+      "closedAt": "2026-10-14T17:45:00+08:00"
+    },
+    {
+      "customerName": "Siti Tan",
+      "customerPhone": "60193595300",
+      "address": "No 67, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "210.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-12T10:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-12T11:00:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "35.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "245.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-12T13:52:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-13T15:52:00+08:00",
+      "closedAt": "2026-10-14T14:52:00+08:00"
+    },
+    {
+      "customerName": "Mei Ling Hassan",
+      "customerPhone": "60186308571",
+      "address": "No 96, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "210.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-13T08:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-13T10:30:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-10-16"
+        }
+      ],
+      "startedAt": "2026-10-16T11:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-16T12:41:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-17T14:41:00+08:00",
+      "closedAt": "2026-10-18T13:41:00+08:00"
+    },
+    {
+      "customerName": "Kumar Kumar",
+      "customerPhone": "60175666113",
+      "address": "No 103, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "490.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-13T09:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-13T11:30:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-13T12:36:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-14T14:36:00+08:00",
+      "closedAt": "2026-10-15T13:36:00+08:00"
+    },
+    {
+      "customerName": "Nurul Wong",
+      "customerPhone": "60134760983",
+      "address": "No 18, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "590.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-13T08:15:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-13T10:15:00+08:00",
+          "reasonCode": "access_problem",
+          "newDate": "2026-10-16"
+        },
+        {
+          "at": "2026-10-16T09:00:00+08:00",
+          "reasonCode": "weather",
+          "newDate": "2026-10-17"
+        }
+      ],
+      "startedAt": "2026-10-17T12:20:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "50.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "640.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-17T14:18:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-18T16:18:00+08:00",
+      "closedAt": "2026-10-19T15:18:00+08:00"
+    },
+    {
+      "customerName": "Hafiz Chong",
+      "customerPhone": "60137775658",
+      "address": "No 16, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "210.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-13T09:00:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-13T11:00:00+08:00",
+          "reasonCode": "customer_unavailable",
+          "newDate": "2026-10-16"
+        }
+      ],
+      "startedAt": "2026-10-16T15:10:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "210.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-16T17:06:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-17T19:06:00+08:00",
+      "closedAt": "2026-10-18T18:06:00+08:00"
+    },
+    {
+      "customerName": "Hafiz Hassan",
+      "customerPhone": "60111537152",
+      "address": "No 91, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "380.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-14T09:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-14T11:40:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "115.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-14T14:36:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-15T16:36:00+08:00",
+      "closedAt": "2026-10-16T15:36:00+08:00"
+    },
+    {
+      "customerName": "Jason Wong",
+      "customerPhone": "60166782911",
+      "address": "No 95, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "150.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-14T09:15:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-14T11:15:00+08:00",
+          "reasonCode": "weather",
+          "newDate": "2026-10-17"
+        }
+      ],
+      "startedAt": "2026-10-17T14:00:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "135.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "285.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-17T15:07:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-18T17:07:00+08:00",
+      "closedAt": "2026-10-19T16:07:00+08:00"
+    },
+    {
+      "customerName": "Kavitha Rahman",
+      "customerPhone": "60146206772",
+      "address": "No 38, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "170.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-14T09:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-14T13:00:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "135.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "305.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-14T15:58:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-15T17:58:00+08:00",
+      "closedAt": "2026-10-16T16:58:00+08:00"
+    },
+    {
+      "customerName": "Zarina Kumar",
+      "customerPhone": "60187719925",
+      "address": "No 107, Kepong, 52100 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "130.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-15T09:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-15T15:40:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-15T17:36:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-16T19:36:00+08:00",
+      "closedAt": "2026-10-17T18:36:00+08:00"
+    },
+    {
+      "customerName": "Siti Rahman",
+      "customerPhone": "60151290125",
+      "address": "No 73, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "140.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-15T09:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-15T12:10:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-15T13:01:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-16T15:01:00+08:00",
+      "closedAt": "2026-10-17T14:01:00+08:00"
+    },
+    {
+      "customerName": "Mei Ling Tan",
+      "customerPhone": "60146798531",
+      "address": "No 59, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "140.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-15T09:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-15T15:40:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "35.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "175.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-15T17:02:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-16T19:02:00+08:00",
+      "closedAt": "2026-10-17T18:02:00+08:00"
+    },
+    {
+      "customerName": "Siti Hassan",
+      "customerPhone": "60161875616",
+      "address": "No 13, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "510.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-16T10:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-16T12:30:00+08:00",
+          "reasonCode": "other",
+          "newDate": "2026-10-17"
+        },
+        {
+          "at": "2026-10-17T09:00:00+08:00",
+          "reasonCode": "customer_unavailable",
+          "newDate": "2026-10-18"
+        }
+      ],
+      "startedAt": "2026-10-18T12:10:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "510.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-18T14:38:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-19T16:38:00+08:00",
+      "closedAt": "2026-10-20T15:38:00+08:00"
+    },
+    {
+      "customerName": "Azlan Ismail",
+      "customerPhone": "60166515546",
+      "address": "No 6, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "180.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-16T10:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-16T14:50:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "90.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "270.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-16T16:01:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-17T18:01:00+08:00",
+      "closedAt": "2026-10-18T17:01:00+08:00"
+    },
+    {
+      "customerName": "Raj Wong",
+      "customerPhone": "60146911119",
+      "address": "No 33, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "500.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-16T09:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-16T13:10:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "10.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "510.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-16T15:40:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-17T17:40:00+08:00",
+      "closedAt": "2026-10-18T16:40:00+08:00"
+    },
+    {
+      "customerName": "Raj Tan",
+      "customerPhone": "60152116632",
+      "address": "No 100, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "220.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-16T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-16T15:30:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "80.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "300.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-16T18:09:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-17T20:09:00+08:00",
+      "closedAt": "2026-10-18T19:09:00+08:00"
+    },
+    {
+      "customerName": "Jason Ismail",
+      "customerPhone": "60119650700",
+      "address": "No 44, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "420.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-16T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-16T12:30:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-16T14:39:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-17T16:39:00+08:00",
+      "closedAt": "2026-10-18T15:39:00+08:00"
+    },
+    {
+      "customerName": "Kumar Ng",
+      "customerPhone": "60126370764",
+      "address": "No 43, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "230.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-16T09:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-16T12:40:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "230.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-16T15:04:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-17T17:04:00+08:00",
+      "closedAt": "2026-10-18T16:04:00+08:00"
+    },
+    {
+      "customerName": "Zarina Tan",
+      "customerPhone": "60188046818",
+      "address": "No 117, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "120.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-16T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-16T15:40:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "120.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-16T16:32:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-17T18:32:00+08:00",
+      "closedAt": "2026-10-18T17:32:00+08:00"
+    },
+    {
+      "customerName": "Azlan Wong",
+      "customerPhone": "60161785357",
+      "address": "No 22, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "240.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-17T08:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-17T15:40:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "240.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-17T17:36:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-18T19:36:00+08:00",
+      "closedAt": "2026-10-19T18:36:00+08:00"
+    },
+    {
+      "customerName": "Nurul Ng",
+      "customerPhone": "60127637587",
+      "address": "No 111, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "110.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-17T08:45:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-17T10:45:00+08:00",
+          "reasonCode": "access_problem",
+          "newDate": "2026-10-19"
+        }
+      ],
+      "startedAt": "2026-10-19T11:00:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "15.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-19T13:43:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-20T15:43:00+08:00",
+      "closedAt": "2026-10-21T14:43:00+08:00"
+    },
+    {
+      "customerName": "Kavitha Kumar",
+      "customerPhone": "60152068536",
+      "address": "No 49, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "190.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-17T09:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-17T15:50:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-17T17:02:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-18T19:02:00+08:00",
+      "closedAt": "2026-10-19T18:02:00+08:00"
+    },
+    {
+      "customerName": "Ahmad Ismail",
+      "customerPhone": "60156240191",
+      "address": "No 20, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "110.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-19T08:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-19T13:10:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-19T14:23:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-20T16:23:00+08:00",
+      "closedAt": "2026-10-21T15:23:00+08:00"
+    },
+    {
+      "customerName": "Kumar Kumar",
+      "customerPhone": "60117689420",
+      "address": "No 29, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "90.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-19T10:45:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-19T12:45:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-10-21"
+        },
+        {
+          "at": "2026-10-21T09:00:00+08:00",
+          "reasonCode": "parts_needed",
+          "newDate": "2026-10-22"
+        }
+      ],
+      "startedAt": "2026-10-22T14:50:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "90.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-22T16:10:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-23T18:10:00+08:00",
+      "closedAt": "2026-10-24T17:10:00+08:00"
+    },
+    {
+      "customerName": "Raj Rahman",
+      "customerPhone": "60111583359",
+      "address": "No 112, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "380.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-19T09:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-19T12:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-19T13:27:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-20T15:27:00+08:00",
+      "closedAt": "2026-10-21T14:27:00+08:00"
+    },
+    {
+      "customerName": "Kavitha Ng",
+      "customerPhone": "60184641306",
+      "address": "No 6, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "110.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-19T10:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-19T12:30:00+08:00",
+          "reasonCode": "other",
+          "newDate": "2026-10-22"
+        }
+      ],
+      "startedAt": "2026-10-22T14:30:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "110.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-22T15:24:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-23T17:24:00+08:00",
+      "closedAt": "2026-10-24T16:24:00+08:00"
+    },
+    {
+      "customerName": "Ahmad Muthu",
+      "customerPhone": "60149122738",
+      "address": "No 113, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "290.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-19T10:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-19T15:30:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "130.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "420.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-19T16:20:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-20T18:20:00+08:00",
+      "closedAt": "2026-10-21T17:20:00+08:00"
+    },
+    {
+      "customerName": "Farid Rahman",
+      "customerPhone": "60199634938",
+      "address": "No 115, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "240.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-20T10:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-20T12:30:00+08:00",
+          "reasonCode": "other",
+          "newDate": "2026-10-22"
+        },
+        {
+          "at": "2026-10-22T09:00:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-10-23"
+        }
+      ],
+      "startedAt": "2026-10-23T14:30:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "240.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-23T17:20:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-24T19:20:00+08:00",
+      "closedAt": "2026-10-25T18:20:00+08:00"
+    },
+    {
+      "customerName": "Priya Kumar",
+      "customerPhone": "60176097955",
+      "address": "No 15, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "110.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-20T09:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-20T15:50:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "110.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-20T17:19:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-21T19:19:00+08:00",
+      "closedAt": "2026-10-22T18:19:00+08:00"
+    },
+    {
+      "customerName": "Mei Ling Chong",
+      "customerPhone": "60122638873",
+      "address": "No 50, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "610.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-20T10:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-20T13:10:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "35.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-20T16:10:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-21T18:10:00+08:00",
+      "closedAt": "2026-10-22T17:10:00+08:00"
+    },
+    {
+      "customerName": "Farid Tan",
+      "customerPhone": "60177526889",
+      "address": "No 120, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "340.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-20T10:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-20T12:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "75.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-20T13:23:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-21T15:23:00+08:00",
+      "closedAt": "2026-10-22T14:23:00+08:00"
+    },
+    {
+      "customerName": "Ahmad Hassan",
+      "customerPhone": "60114644311",
+      "address": "No 115, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "160.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-21T08:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-21T13:00:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "160.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-21T15:19:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-22T17:19:00+08:00",
+      "closedAt": "2026-10-23T16:19:00+08:00"
+    },
+    {
+      "customerName": "Wei Jie Wong",
+      "customerPhone": "60145064900",
+      "address": "No 3, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "200.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-21T09:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-21T14:20:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "200.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-21T15:54:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-22T17:54:00+08:00",
+      "closedAt": "2026-10-23T16:54:00+08:00"
+    },
+    {
+      "customerName": "Azlan Kumar",
+      "customerPhone": "60197990520",
+      "address": "No 23, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "280.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-21T10:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-21T14:20:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "120.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-21T15:19:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-22T17:19:00+08:00",
+      "closedAt": "2026-10-23T16:19:00+08:00"
+    },
+    {
+      "customerName": "Priya Ng",
+      "customerPhone": "60177061313",
+      "address": "No 58, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "170.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-21T08:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-21T15:00:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "170.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-21T16:42:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-22T18:42:00+08:00",
+      "closedAt": "2026-10-23T17:42:00+08:00"
+    },
+    {
+      "customerName": "Wei Jie Hassan",
+      "customerPhone": "60184855472",
+      "address": "No 98, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "180.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-21T09:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-21T11:30:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-10-22"
+        },
+        {
+          "at": "2026-10-22T09:00:00+08:00",
+          "reasonCode": "parts_needed",
+          "newDate": "2026-10-23"
+        }
+      ],
+      "startedAt": "2026-10-23T15:00:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "180.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-23T17:28:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-24T19:28:00+08:00",
+      "closedAt": "2026-10-25T18:28:00+08:00"
+    },
+    {
+      "customerName": "Jason Rahman",
+      "customerPhone": "60155153506",
+      "address": "No 54, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "100.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-22T08:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-22T14:20:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "75.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "175.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-22T15:12:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-23T17:12:00+08:00",
+      "closedAt": "2026-10-24T16:12:00+08:00"
+    },
+    {
+      "customerName": "Hafiz Hassan",
+      "customerPhone": "60187224666",
+      "address": "No 97, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "590.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-22T10:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-22T12:00:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "65.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-22T14:17:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-23T16:17:00+08:00",
+      "closedAt": "2026-10-24T15:17:00+08:00"
+    },
+    {
+      "customerName": "Siti Muthu",
+      "customerPhone": "60153933655",
+      "address": "No 13, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "160.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-22T09:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-22T15:40:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "65.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "225.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-22T16:39:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-23T18:39:00+08:00",
+      "closedAt": "2026-10-24T17:39:00+08:00"
+    },
+    {
+      "customerName": "Siti Lim",
+      "customerPhone": "60122471072",
+      "address": "No 38, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "170.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-22T09:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-22T15:40:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "30.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "200.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-22T16:58:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-23T18:58:00+08:00",
+      "closedAt": "2026-10-24T17:58:00+08:00"
+    },
+    {
+      "customerName": "Azlan Chong",
+      "customerPhone": "60176778638",
+      "address": "No 61, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "240.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-23T08:00:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-23T10:00:00+08:00",
+          "reasonCode": "other",
+          "newDate": "2026-10-25"
+        },
+        {
+          "at": "2026-10-25T09:00:00+08:00",
+          "reasonCode": "customer_unavailable",
+          "newDate": "2026-10-26"
+        }
+      ],
+      "startedAt": "2026-10-26T15:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-26T17:11:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-27T19:11:00+08:00",
+      "closedAt": "2026-10-28T18:11:00+08:00"
+    },
+    {
+      "customerName": "Siti Hassan",
+      "customerPhone": "60154253975",
+      "address": "No 20, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "160.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-23T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-23T13:20:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "30.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "190.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-23T14:39:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-24T16:39:00+08:00",
+      "closedAt": "2026-10-25T15:39:00+08:00"
+    },
+    {
+      "customerName": "Siti Ismail",
+      "customerPhone": "60191194765",
+      "address": "No 87, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "140.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-24T09:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-24T11:30:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-10-26"
+        }
+      ],
+      "startedAt": "2026-10-26T11:50:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "140.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-26T12:49:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-27T14:49:00+08:00",
+      "closedAt": "2026-10-28T13:49:00+08:00"
+    },
+    {
+      "customerName": "Jason Abdullah",
+      "customerPhone": "60118439485",
+      "address": "No 17, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "100.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-24T09:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-24T12:10:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "100.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-24T13:11:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-25T15:11:00+08:00",
+      "closedAt": "2026-10-26T14:11:00+08:00"
+    },
+    {
+      "customerName": "Kavitha Rahman",
+      "customerPhone": "60193072370",
+      "address": "No 20, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "150.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-24T10:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-24T14:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "150.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-24T15:37:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-25T17:37:00+08:00",
+      "closedAt": "2026-10-26T16:37:00+08:00"
+    },
+    {
+      "customerName": "Priya Rahman",
+      "customerPhone": "60131122570",
+      "address": "No 108, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "100.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-26T08:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-26T11:20:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "130.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "230.00",
+          "method": "card"
+        },
+        "completedAt": "2026-10-26T12:07:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-27T14:07:00+08:00",
+      "closedAt": "2026-10-28T13:07:00+08:00"
+    },
+    {
+      "customerName": "Siti Abdullah",
+      "customerPhone": "60128615056",
+      "address": "No 3, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "310.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-26T10:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-26T12:20:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "75.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "385.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-26T14:37:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-27T16:37:00+08:00",
+      "closedAt": "2026-10-28T15:37:00+08:00"
+    },
+    {
+      "customerName": "Priya Ng",
+      "customerPhone": "60146781025",
+      "address": "No 3, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "100.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-26T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-26T13:20:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "100.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-26T14:07:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-27T16:07:00+08:00",
+      "closedAt": "2026-10-28T15:07:00+08:00"
+    },
+    {
+      "customerName": "Ahmad Hassan",
+      "customerPhone": "60171370870",
+      "address": "No 19, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "150.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-26T08:45:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-26T10:45:00+08:00",
+          "reasonCode": "access_problem",
+          "newDate": "2026-10-27"
+        }
+      ],
+      "startedAt": "2026-10-27T13:10:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "45.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-27T14:50:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-28T16:50:00+08:00",
+      "closedAt": "2026-10-29T15:50:00+08:00"
+    },
+    {
+      "customerName": "Zarina Tan",
+      "customerPhone": "60195728416",
+      "address": "No 55, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "170.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-27T09:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-27T12:50:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "65.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "235.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-27T14:48:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-28T16:48:00+08:00",
+      "closedAt": "2026-10-29T15:48:00+08:00"
+    },
+    {
+      "customerName": "Nurul Wong",
+      "customerPhone": "60143443431",
+      "address": "No 118, Mont Kiara, 50480 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "140.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-27T09:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-27T14:40:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "140.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-27T16:47:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-28T18:47:00+08:00",
+      "closedAt": "2026-10-29T17:47:00+08:00"
+    },
+    {
+      "customerName": "Kavitha Lim",
+      "customerPhone": "60167216898",
+      "address": "No 71, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "140.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-27T09:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-27T11:30:00+08:00",
+          "reasonCode": "customer_unavailable",
+          "newDate": "2026-10-29"
+        }
+      ],
+      "startedAt": "2026-10-29T11:50:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "140.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-29T13:23:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-30T15:23:00+08:00",
+      "closedAt": "2026-10-31T14:23:00+08:00"
+    },
+    {
+      "customerName": "Nurul Lee",
+      "customerPhone": "60132324664",
+      "address": "No 115, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "340.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-27T09:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-27T14:20:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "145.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "485.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-27T16:32:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-28T18:32:00+08:00",
+      "closedAt": "2026-10-29T17:32:00+08:00"
+    },
+    {
+      "customerName": "Azlan Kumar",
+      "customerPhone": "60139963400",
+      "address": "No 23, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "410.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-27T10:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-27T11:10:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "410.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-27T13:19:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-28T15:19:00+08:00",
+      "closedAt": "2026-10-29T14:19:00+08:00"
+    },
+    {
+      "customerName": "Zarina Rahman",
+      "customerPhone": "60193344028",
+      "address": "No 67, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "90.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-28T09:00:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-28T11:00:00+08:00",
+          "reasonCode": "access_problem",
+          "newDate": "2026-10-29"
+        }
+      ],
+      "startedAt": "2026-10-29T15:10:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "90.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-29T16:33:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-30T18:33:00+08:00",
+      "closedAt": "2026-10-31T17:33:00+08:00"
+    },
+    {
+      "customerName": "Priya Chong",
+      "customerPhone": "60131517151",
+      "address": "No 31, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "90.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-28T08:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-28T11:20:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "150.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "240.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-28T12:18:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-29T14:18:00+08:00",
+      "closedAt": "2026-10-30T13:18:00+08:00"
+    },
+    {
+      "customerName": "Aisyah Lee",
+      "customerPhone": "60114912883",
+      "address": "No 39, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "330.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-28T10:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-28T14:40:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "330.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-28T16:42:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-29T18:42:00+08:00",
+      "closedAt": "2026-10-30T17:42:00+08:00"
+    },
+    {
+      "customerName": "Hafiz Abdullah",
+      "customerPhone": "60184594369",
+      "address": "No 47, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "110.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-29T09:15:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-29T11:15:00+08:00",
+          "reasonCode": "parts_needed",
+          "newDate": "2026-10-31"
+        }
+      ],
+      "startedAt": "2026-10-31T13:30:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "110.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-31T14:19:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-11-01T16:19:00+08:00"
+    },
+    {
+      "customerName": "Kumar Kumar",
+      "customerPhone": "60184046174",
+      "address": "No 48, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "370.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-29T09:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-29T11:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "370.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-29T13:23:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-30T15:23:00+08:00",
+      "closedAt": "2026-10-31T14:23:00+08:00"
+    },
+    {
+      "customerName": "Farid Chong",
+      "customerPhone": "60146268839",
+      "address": "No 89, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "250.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-29T09:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-29T14:10:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "60.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-29T16:28:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-30T18:28:00+08:00",
+      "closedAt": "2026-10-31T17:28:00+08:00"
+    },
+    {
+      "customerName": "Wei Jie Ng",
+      "customerPhone": "60169971934",
+      "address": "No 23, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "360.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-29T09:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-29T15:50:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "95.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "455.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-29T18:29:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-30T20:29:00+08:00",
+      "closedAt": "2026-10-31T19:29:00+08:00"
+    },
+    {
+      "customerName": "Kavitha Kumar",
+      "customerPhone": "60139487223",
+      "address": "No 26, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "110.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-29T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-29T13:30:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "140.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-29T16:10:00+08:00"
+      },
+      "status": "closed",
+      "reviewedAt": "2026-10-30T18:10:00+08:00",
+      "closedAt": "2026-10-31T17:10:00+08:00"
+    },
+    {
+      "customerName": "Ahmad Lee",
+      "customerPhone": "60177197313",
+      "address": "No 61, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "150.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-30T08:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-30T11:20:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "150.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "300.00",
+          "method": "bank_transfer"
+        },
+        "completedAt": "2026-10-30T12:59:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-10-31T14:59:00+08:00"
+    },
+    {
+      "customerName": "Priya Lee",
+      "customerPhone": "60118173015",
+      "address": "No 109, Kepong, 52100 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "120.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-10-30T08:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-30T10:30:00+08:00",
+          "reasonCode": "weather",
+          "newDate": "2026-10-31"
+        }
+      ],
+      "startedAt": "2026-10-31T11:50:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "120.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-10-31T12:51:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-11-01T14:51:00+08:00"
+    },
+    {
+      "customerName": "Priya Lee",
+      "customerPhone": "60135292264",
+      "address": "No 82, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "130.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-10-30T08:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-30T14:40:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "75.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": null,
+        "completedAt": "2026-10-30T17:38:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-10-31T19:38:00+08:00"
+    },
+    {
+      "customerName": "Nurul Ng",
+      "customerPhone": "60171424468",
+      "address": "No 70, Bangsar, 59100 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "320.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-30T10:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-30T11:20:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-10-30T14:01:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-10-31T16:01:00+08:00"
+    },
+    {
+      "customerName": "Aisyah Rahman",
+      "customerPhone": "60122190875",
+      "address": "No 93, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "160.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-10-31T10:15:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-10-31T12:15:00+08:00",
+          "reasonCode": "other",
+          "newDate": "2026-11-01"
+        }
+      ],
+      "startedAt": "2026-11-01T15:30:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "160.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-11-01T16:20:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-11-02T18:20:00+08:00"
+    },
+    {
+      "customerName": "Siti Tan",
+      "customerPhone": "60181479844",
+      "address": "No 114, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "100.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-10-31T09:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-10-31T15:40:00+08:00",
+      "completion": {
+        "workDone": "Chemical wash of indoor and outdoor units, cleaned filters and drain pan.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "100.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-10-31T17:32:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-11-01T19:32:00+08:00"
+    },
+    {
+      "customerName": "Ahmad Hassan",
+      "customerPhone": "60156042023",
+      "address": "No 113, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "290.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-11-02T08:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-11-02T12:10:00+08:00",
+      "completion": {
+        "workDone": "Replaced faulty capacitor and tested cooling for 30 minutes.",
+        "extraCharges": "130.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "420.00",
+          "method": "card"
+        },
+        "completedAt": "2026-11-02T14:18:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-11-03T16:18:00+08:00"
+    },
+    {
+      "customerName": "Hafiz Rahman",
+      "customerPhone": "60163051283",
+      "address": "No 73, Jalan Ampang, 50450 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "190.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-11-02T08:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-11-02T15:00:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "135.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "325.00",
+          "method": "cash"
+        },
+        "completedAt": "2026-11-02T17:36:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-11-03T19:36:00+08:00"
+    },
+    {
+      "customerName": "Kumar Lim",
+      "customerPhone": "60167137435",
+      "address": "No 36, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "150.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-11-02T10:15:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-11-02T12:15:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-11-05"
+        }
+      ],
+      "status": "assigned"
+    },
+    {
+      "customerName": "Siti Tan",
+      "customerPhone": "60154339146",
+      "address": "No 6, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "700.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-11-02T09:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-11-02T13:10:00+08:00",
+      "completion": {
+        "workDone": "Installed new wall unit, piping, and bracket; tested operation.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-11-02T15:30:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-11-03T17:30:00+08:00"
+    },
+    {
+      "customerName": "Kavitha Lim",
+      "customerPhone": "60192263990",
+      "address": "No 93, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "130.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-11-03T08:30:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-11-03T10:30:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-11-04"
+        },
+        {
+          "at": "2026-11-04T09:00:00+08:00",
+          "reasonCode": "access_problem",
+          "newDate": "2026-11-05"
+        }
+      ],
+      "status": "assigned"
+    },
+    {
+      "customerName": "Jason Wong",
+      "customerPhone": "60142172706",
+      "address": "No 67, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "240.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-11-03T09:30:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-11-03T14:30:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": null,
+        "completedAt": "2026-11-03T15:47:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-11-04T17:47:00+08:00"
+    },
+    {
+      "customerName": "Siti Abdullah",
+      "customerPhone": "60124799614",
+      "address": "No 56, Setapak, 53300 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "190.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-11-03T10:00:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-11-03T11:10:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "190.00",
+          "method": "ewallet"
+        },
+        "completedAt": "2026-11-03T13:42:00+08:00"
+      },
+      "status": "reviewed",
+      "reviewedAt": "2026-11-04T15:42:00+08:00"
+    },
+    {
+      "customerName": "Azlan Ng",
+      "customerPhone": "60135615208",
+      "address": "No 110, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "200.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-11-04T10:00:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-11-04T12:00:00+08:00",
+          "reasonCode": "technician_unavailable",
+          "newDate": "2026-11-06"
+        }
+      ],
+      "status": "assigned"
+    },
+    {
+      "customerName": "Ahmad Ng",
+      "customerPhone": "60193586199",
+      "address": "No 26, Cheras, 56000 Kuala Lumpur",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "110.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-11-04T10:15:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-11-04T15:50:00+08:00",
+      "completion": {
+        "workDone": "General servicing: cleaned filters, checked gas pressure and drainage.",
+        "extraCharges": "0.00",
+        "remarks": null,
+        "payment": {
+          "amount": "110.00",
+          "method": "card"
+        },
+        "completedAt": "2026-11-04T17:19:00+08:00"
+      },
+      "status": "job_done"
+    },
+    {
+      "customerName": "Nurul Chong",
+      "customerPhone": "60123662339",
+      "address": "No 35, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Aircond blowing warm air after a few minutes.",
+      "serviceType": "gas_refill",
+      "quotedPrice": "240.00",
+      "technician": "chong@utopia.com",
+      "createdAt": "2026-11-04T10:45:00+08:00",
+      "postponements": [],
+      "startedAt": "2026-11-04T11:30:00+08:00",
+      "completion": {
+        "workDone": "Topped up R32 refrigerant and checked for leaks.",
+        "extraCharges": "105.00",
+        "remarks": "Extra parts used, customer agreed.",
+        "payment": {
+          "amount": "345.00",
+          "method": "card"
+        },
+        "completedAt": "2026-11-04T12:34:00+08:00"
+      },
+      "status": "job_done"
+    },
+    {
+      "customerName": "Hafiz Muthu",
+      "customerPhone": "60139398415",
+      "address": "No 103, Subang Jaya, 47500 Selangor",
+      "problemDescription": "Install a new 1.5 HP wall-mounted unit in the master bedroom.",
+      "serviceType": "installation",
+      "quotedPrice": "510.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-11-05T08:45:00+08:00",
+      "postponements": [
+        {
+          "at": "2026-11-05T10:45:00+08:00",
+          "reasonCode": "access_problem",
+          "newDate": "2026-11-06"
+        }
+      ],
+      "status": "assigned"
+    },
+    {
+      "customerName": "Siti Ismail",
+      "customerPhone": "60197157633",
+      "address": "No 78, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Routine servicing for two units.",
+      "serviceType": "general_servicing",
+      "quotedPrice": "130.00",
+      "technician": "ali@utopia.com",
+      "createdAt": "2026-11-05T09:30:00+08:00",
+      "postponements": [],
+      "status": "assigned"
+    },
+    {
+      "customerName": "Kavitha Muthu",
+      "customerPhone": "60191120569",
+      "address": "No 104, Petaling Jaya, 47301 Selangor",
+      "problemDescription": "Aircond smells musty and airflow is weak.",
+      "serviceType": "cleaning",
+      "quotedPrice": "110.00",
+      "technician": "bala@utopia.com",
+      "createdAt": "2026-11-05T09:15:00+08:00",
+      "postponements": [],
+      "status": "assigned"
+    },
+    {
+      "customerName": "Hafiz Ismail",
+      "customerPhone": "60178145121",
+      "address": "No 26, Taman Tun Dr Ismail, 60000 Kuala Lumpur",
+      "problemDescription": "Aircond not cooling, outdoor unit not starting.",
+      "serviceType": "repair",
+      "quotedPrice": "300.00",
+      "technician": "devi@utopia.com",
+      "createdAt": "2026-11-05T08:15:00+08:00",
+      "postponements": [],
+      "status": "assigned"
+    }
+  ]
+}

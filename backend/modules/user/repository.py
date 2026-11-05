@@ -38,6 +38,14 @@ def listUsers(search, roleCode, offset, limit, conn=None):
     )
     return readAll(query, conn), total
 
+# Returns every user with the given role as {user_id, name}, ordered by name.
+def listByRole(roleCode, conn=None):
+    query = (
+        select(userTable.c.user_id, userTable.c.name).select_from(USER_JOIN)
+        .where(roleTable.c.role_code == roleCode).order_by(userTable.c.name, userTable.c.user_id)
+    )
+    return readAll(query, conn)
+
 # Updates name, phone, or age and the audit columns for one user.
 def updateDetails(userId, values, updatedBy, conn=None):
     statement = update(userTable).where(userTable.c.user_id == userId).values(**values, updated_at=func.now(), updated_by=updatedBy)
@@ -54,6 +62,7 @@ __all__ = [
     "findActiveRole",
     "getUserById",
     "insertUser",
+    "listByRole",
     "listUsers",
     "updateDetails",
     "updateRole",

@@ -97,6 +97,16 @@ export function useChangeStatus(orderId: string) {
   });
 }
 
+// Records a postponed visit, never retried; any outcome, including a 409, refreshes the order and its timeline.
+export function usePostponeOrder(orderId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: api.PostponePayload) => api.postponeOrder(orderId, payload),
+    retry: false,
+    onSettled: () => invalidateOrder(queryClient, orderId),
+  });
+}
+
 // Reads one page of notifications, polling every two seconds while any is still being prepared, for at most 30 seconds.
 export function useNotifications(filters: NotificationFilters, enabled = true) {
   const pollingSince = useRef<number | null>(null);

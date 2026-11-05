@@ -94,6 +94,13 @@ export async function changeStatus(orderId: string, action: "start" | "review" |
   return orderEnvelopeSchema.parse(await apiRequest(`/orders/${encodeURIComponent(orderId)}/${action}`, { method: "POST" })).order;
 }
 
+export type PostponePayload = { reasonCode: string; newDate?: string };
+
+// Records a postponed visit; the order keeps its status.
+export async function postponeOrder(orderId: string, payload: PostponePayload): Promise<Order> {
+  return orderEnvelopeSchema.parse(await apiRequest(`/orders/${encodeURIComponent(orderId)}/postpone`, { method: "POST", body: payload })).order;
+}
+
 // Fetches the technicians an admin can assign, from the admin-only users endpoint.
 export async function listTechnicians(signal?: AbortSignal): Promise<Technician[]> {
   const body = await apiRequest("/users", { query: { roleCode: "technician", pageSize: 100 }, signal });
