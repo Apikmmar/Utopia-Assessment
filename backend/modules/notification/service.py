@@ -2,7 +2,6 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 from zoneinfo import ZoneInfo
-from core import jobs
 from core.auth import ROLE_ADMIN, ROLE_MANAGER, ROLE_TECHNICIAN
 from core.db import transaction
 from core.error import FORBIDDEN_CODE, NOTIFICATION_NOT_FAILED_CODE, NOTIFICATION_NOT_FOUND_CODE, NOTIFICATION_NOT_READY_CODE, serviceError
@@ -10,15 +9,14 @@ from core.logger import getLogger
 from modules.notification import repository
 from modules.notification.constants import (
     CANNOT_SEND_MESSAGE, DISPLAY_TIMEZONE, ERROR_MESSAGE_MAX_LENGTH, JOB_ASSIGNED_GREETING, JOB_ASSIGNED_LINES,
-    JOB_ASSIGNED_NOTES_LABEL, JOB_DONE_TEMPLATE, JOB_TYPE_DELIVER, MESSAGE_MAX_LENGTH, NOT_FAILED_MESSAGE, NOT_FOUND_MESSAGE,
-    NOT_READY_MESSAGE, OPENABLE_STATUSES, STATE_PENDING, STATUS_FAILED, STATUS_QUEUED, STATUSES_BY_STATE, TYPE_JOB_ASSIGNED,
+    JOB_ASSIGNED_NOTES_LABEL, JOB_DONE_TEMPLATE, MESSAGE_MAX_LENGTH, NOT_FAILED_MESSAGE, NOT_FOUND_MESSAGE,
+    NOT_READY_MESSAGE, OPENABLE_STATUSES, STATE_PENDING, STATUS_FAILED, STATUSES_BY_STATE, TYPE_JOB_ASSIGNED,
     TYPE_JOB_DONE,
 )
 from modules.notification.provider import providerFor
 
 log = getLogger(__name__)
 
-WORKER_ACTOR = "worker"
 MONTH_NAMES = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 displayZone = ZoneInfo(DISPLAY_TIMEZONE)
 
@@ -82,9 +80,9 @@ def present(actor, row):
         "opened_by": openedBy, "can_send": canSend(actor, row), "created_at": row["created_at"],
     }
 
-# Queues a notification and its delivery job inside the caller's transaction and returns the stored row.
+# Stores a notification and prepares its message inside the caller's transaction, returning the stored row.
 # The recipient is {type, name, phone, userId}; templateData is the snapshot the message is rendered from.
-def enqueue(conn, orderId, orderNo, notificationType, recipient, senderUserId, templateData, requestId, actor):
+def create(conn, orderId, orderNo, notificationType, recipient, senderUserId, templateData, requestId, actor):
     notificationId = repository.insertNotification({
         "service_order_id": orderId, "order_no": orderNo, "notification_type": notificationType,
         "recipient_type": recipient["type"], "recipient_user_id": recipient.get("userId"), "recipient_name": recipient["name"],
@@ -92,29 +90,25 @@ def enqueue(conn, orderId, orderNo, notificationType, recipient, senderUserId, t
         "template_data": {key: jsonValue(value) for key, value in templateData.items()},
         "request_id": requestId, "created_by": actor, "updated_by": actor,
     }, conn)
-    jobId = jobs.enqueueJob(conn, JOB_TYPE_DELIVER, {"notificationId": str(notificationId)}, f"notification:{notificationId}", requestId, actor)
-    repository.setJob(notificationId, jobId, conn)
-    log.info("notification_queued notification_id=%s notification_type=%s", notificationId, notificationType)
+    prepare(conn, repository.lockNotification(notificationId, conn), actor)
     return repository.getNotification(notificationId, conn)
 
-# Job handler: renders a still-queued notification and lets its provider deliver it; anything else is left alone.
-def deliver(notificationId):
-    with transaction() as conn:
-        row = repository.lockNotification(notificationId, conn)
-        if row is None or row["status"] != STATUS_QUEUED:
-            return
+# Renders a queued notification's message and link in the caller's transaction and marks it ready; a rendering or
+# provider failure marks it failed with the error type, which holds no personal data, so the caller's change still commits.
+def prepare(conn, row, actor):
+    notificationId = row["notification_id"]
+    try:
         message = renderMessage(row["notification_type"], row["template_data"])
         if len(message) > MESSAGE_MAX_LENGTH:
             raise ValueError("MessageTooLong")
         result = providerFor(row["provider"]).deliver(row, message)
-        repository.markReady(notificationId, message, result.deepLink, result.providerMessageId, result.status, WORKER_ACTOR, conn)
-    log.info("notification_ready notification_id=%s", notificationId)
-
-# Job failure hook: marks a still-queued notification failed with a short reason that holds no personal data.
-def markFailed(notificationId, reason):
-    with transaction() as conn:
-        repository.markFailed(notificationId, (reason or "")[:ERROR_MESSAGE_MAX_LENGTH], WORKER_ACTOR, conn)
-    log.error("notification_failed notification_id=%s reason=%s", notificationId, reason)
+    except Exception as error:
+        reason = type(error).__name__[:ERROR_MESSAGE_MAX_LENGTH]
+        repository.markFailed(notificationId, reason, actor, conn)
+        log.error("notification_failed notification_id=%s reason=%s", notificationId, reason)
+        return
+    repository.markReady(notificationId, message, result.deepLink, result.providerMessageId, result.status, actor, conn)
+    log.info("notification_ready notification_id=%s notification_type=%s", notificationId, row["notification_type"])
 
 # Lists notifications for the page and the order panel: technicians only see their own, and sendable keeps only those
 # the user is expected to send while they are pending.
@@ -146,7 +140,7 @@ def markOpened(actor, notificationId):
     log.info("notification_opened notification_id=%s actor_id=%s", notificationId, actor.userId)
     return present(actor, opened), None
 
-# Puts a failed notification back in the queue with a new delivery job, admin only, and returns (notification, error).
+# Prepares a failed notification again, admin only, and returns (notification, error); it ends ready or failed.
 def retry(actor, notificationId, requestId):
     if actor.roleCode != ROLE_ADMIN:
         return None, serviceError(FORBIDDEN_CODE, CANNOT_SEND_MESSAGE)
@@ -156,32 +150,20 @@ def retry(actor, notificationId, requestId):
             return None, serviceError(NOTIFICATION_NOT_FOUND_CODE, NOT_FOUND_MESSAGE)
         if row["status"] != STATUS_FAILED:
             return None, serviceError(NOTIFICATION_NOT_FAILED_CODE, NOT_FAILED_MESSAGE)
-        idempotencyKey = f"notification:{notificationId}:after:{row['job_id']}"
-        jobId = jobs.enqueueJob(conn, JOB_TYPE_DELIVER, {"notificationId": str(notificationId)}, idempotencyKey, requestId, actor.email)
-        repository.requeue(notificationId, jobId, actor.email, conn)
+        repository.requeue(notificationId, actor.email, conn)
+        prepare(conn, repository.lockNotification(notificationId, conn), actor.email)
         retried = repository.getNotification(notificationId, conn)
-    log.info("notification_retried notification_id=%s actor_id=%s", notificationId, actor.userId)
+    log.info("notification_retried notification_id=%s actor_id=%s request_id=%s", notificationId, actor.userId, requestId)
     return present(actor, retried), None
-
-# Worker entry point for a notification.deliver job.
-def deliverJob(payload):
-    deliver(UUID(payload["notificationId"]))
-
-# Worker failure hook for a notification.deliver job that used up its attempts.
-def deliverJobExhausted(payload, reason):
-    markFailed(UUID(payload["notificationId"]), reason)
 
 
 __all__ = [
     "canSend",
-    "deliver",
-    "deliverJob",
-    "deliverJobExhausted",
-    "enqueue",
+    "create",
     "formatLocalTime",
     "listNotifications",
-    "markFailed",
     "markOpened",
+    "prepare",
     "present",
     "renderMessage",
     "retry",

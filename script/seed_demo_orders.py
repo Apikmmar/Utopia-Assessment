@@ -4,13 +4,13 @@ import sys
 from datetime import datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
-from urllib.parse import urlsplit
 
 BACKEND_DIRECTORY = str(Path(__file__).resolve().parents[1] / "backend")
 if BACKEND_DIRECTORY not in sys.path:
     sys.path.insert(0, BACKEND_DIRECTORY)
 
 from sqlalchemy import delete, exists, func, insert, select
+from sqlalchemy.engine import make_url
 from core import config
 from core.auth import ROLE_TECHNICIAN
 from core.crypto import hashPassword
@@ -37,9 +37,10 @@ class SeedError(Exception):
     pass
 
 
-# Returns the database host from DATABASE_URL, without the user or password, so the target can be shown safely.
+# Returns the database host from DATABASE_URL, parsed as the engine parses it, so the target can be shown without
+# the user or password.
 def targetHost():
-    return urlsplit(config.databaseUrl()).hostname or "unknown host"
+    return make_url(config.databaseUrl()).host or "unknown host"
 
 # Loads the demo data file.
 def loadData(path=DATA_FILE):

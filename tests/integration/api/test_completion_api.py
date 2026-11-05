@@ -52,7 +52,7 @@ def testSubmitCompletion(world, clients, scalar):
     assert (completion["remarks"], completion["payment"], completion["technician"]["name"]) == ("Gas topped up", None, "Tom Tech")
     assert (body["order"]["status"], body["order"]["jobDoneAt"] is not None) == ("job_done", True)
     notification = body["notification"]
-    assert (notification["notificationType"], notification["recipientType"], notification["status"]) == ("job_done", "customer", "queued")
+    assert (notification["notificationType"], notification["recipientType"], notification["status"]) == ("job_done", "customer", "ready")
     assert notification["recipientName"] == "Siti Customer" and notification["orderNo"] == world["orderNo"]
     senderId = scalar("SELECT sender_user_id FROM notification WHERE notification_id = :id", id=notification["notificationId"])
     assert str(senderId) == str(world["techA"])

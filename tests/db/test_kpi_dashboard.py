@@ -90,7 +90,7 @@ def testWeekFiguresPerTechnician(appDb, people):
 
 # Up, down, up keeps the named check and partial index; postponed rows are accepted after up and block the down.
 def testPostponedMigrationRollsBack(testEngine, testSchema):
-    migrations = schemaMigrations(testSchema)
+    migrations = [migration for migration in schemaMigrations(testSchema) if migration.name <= POSTPONED_MIGRATION]
     with testEngine.connect() as conn, conn.begin():
         applyPending(conn, migrations, schema=testSchema)
         assert "'postponed'" in conn.execute(text(CONSTRAINT_QUERY), {"schema": testSchema}).scalar_one()

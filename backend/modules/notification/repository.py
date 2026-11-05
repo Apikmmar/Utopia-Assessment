@@ -8,7 +8,7 @@ NOTIFICATION_COLUMNS = (
     notificationTable.c.notification_type, notificationTable.c.channel, notificationTable.c.provider,
     notificationTable.c.recipient_type, notificationTable.c.recipient_user_id, notificationTable.c.recipient_name,
     notificationTable.c.recipient_phone, notificationTable.c.sender_user_id, notificationTable.c.message,
-    notificationTable.c.deep_link, notificationTable.c.status, notificationTable.c.job_id, notificationTable.c.ready_at,
+    notificationTable.c.deep_link, notificationTable.c.status, notificationTable.c.ready_at,
     notificationTable.c.opened_at, notificationTable.c.opened_by_id, openedByUser.c.name.label("opened_by_name"),
     notificationTable.c.created_at,
 )
@@ -21,10 +21,6 @@ def prefixPattern(search):
 # Inserts one queued notification and returns its id.
 def insertNotification(values, conn):
     return conn.execute(notificationTable.insert().values(**values).returning(notificationTable.c.notification_id)).scalar_one()
-
-# Points a notification at the job that delivers it.
-def setJob(notificationId, jobId, conn):
-    conn.execute(update(notificationTable).where(notificationTable.c.notification_id == notificationId).values(job_id=jobId))
 
 # Returns one notification with the name of whoever opened it, or None.
 def getNotification(notificationId, conn=None):
@@ -69,12 +65,12 @@ def markOpened(notificationId, openableStatuses, actorId, actor, conn):
     )
     return conn.execute(statement).rowcount
 
-# Returns a failed notification to queued with its error cleared and its new job attached.
-def requeue(notificationId, jobId, actor, conn):
+# Returns a failed notification to queued with its error cleared, ready to be prepared again.
+def requeue(notificationId, actor, conn):
     statement = (
         update(notificationTable)
         .where(notificationTable.c.notification_id == notificationId, notificationTable.c.status == "failed")
-        .values(status="queued", job_id=jobId, error_message=None, updated_at=func.now(), updated_by=actor)
+        .values(status="queued", error_message=None, updated_at=func.now(), updated_by=actor)
     )
     return conn.execute(statement).rowcount
 
@@ -119,5 +115,4 @@ __all__ = [
     "markOpened",
     "markReady",
     "requeue",
-    "setJob",
 ]

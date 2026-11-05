@@ -218,7 +218,6 @@ notificationTable = Table(
     Column("template_data", JSONB, nullable=False),
     Column("message", String(4000)), Column("deep_link", String(8000)),
     Column("status", String(20), nullable=False, server_default=text("'queued'")),
-    Column("job_id", UUID(as_uuid=True), ForeignKey("job.job_id", ondelete="RESTRICT"), index=True),
     Column("provider_message_id", String(100)), Column("error_message", String(500)),
     Column("ready_at", TIMESTAMP(timezone=True)), Column("opened_at", TIMESTAMP(timezone=True)),
     Column("opened_by_id", UUID(as_uuid=True), ForeignKey("user.user_id", ondelete="RESTRICT")),

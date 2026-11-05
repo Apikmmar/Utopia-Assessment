@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: utopia-api
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn api.main:createApp --factory --app-dir backend --host 0.0.0.0 --port $PORT
+    healthCheckPath: /info
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.14.3
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: APP_ALLOWED_ORIGIN
+        sync: false
+      - key: AUTH_COOKIE_SECURE
+        value: "true"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: STORAGE_BUCKET
+        value: order-files

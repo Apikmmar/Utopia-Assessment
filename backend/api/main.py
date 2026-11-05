@@ -20,7 +20,6 @@ from modules.notification.router import router as notificationRouter
 from modules.order.router import router as orderRouter
 from modules.service_type.router import router as serviceTypeRouter
 from modules.user.router import router as userRouter
-from worker.main import startEmbeddedWorker
 
 log = getLogger(__name__)
 
@@ -34,7 +33,6 @@ PUBLIC_ROUTES = frozenset({
 })
 ALLOWED_METHODS = ["GET", "POST", "PATCH", "PUT", "DELETE"]
 ALLOWED_HEADERS = ["Content-Type", REQUEST_ID_HEADER]
-EMBEDDED_WORKER_STOP_SECONDS = 10
 
 systemRouter = APIRouter()
 
@@ -75,20 +73,15 @@ def assertRoutesProtected(routers, publicRoutes=PUBLIC_ROUTES):
 def featureRouters():
     return [systemRouter, authRouter, userRouter, serviceTypeRouter, notificationRouter, orderRouter, attachmentRouter, completionRouter, kpiRouter]
 
-# Validates required settings at server start, warms the dummy password hash, and runs the worker
-# in a background thread when WORKER_EMBEDDED is on, stopping it and the storage client at shutdown.
+# Validates required settings at server start, warms the dummy password hash, and closes the storage
+# client at shutdown.
 @asynccontextmanager
 async def lifespan(app):
     config.requireStartupSettings()
     dummyHash()
-    embedded = startEmbeddedWorker() if config.workerEmbedded() else None
     try:
         yield
     finally:
-        if embedded is not None:
-            worker, thread = embedded
-            worker.stop()
-            thread.join(EMBEDDED_WORKER_STOP_SECONDS)
         closeStorage()
 
 # Builds the FastAPI application; run with uvicorn api.main:createApp --factory --app-dir backend.

@@ -67,7 +67,7 @@ def testCreateAssignedQueuesNotification(world, clients, scalar):
     body = createOrder(clients, world, technicianId=str(world["techA"]), adminNotes="Bring a ladder")
     order, notification = body["order"], body["notification"]
     assert order["status"] == "assigned" and order["technician"]["name"] == "Tom Tech"
-    assert (notification["notificationType"], notification["recipientName"], notification["status"]) == ("job_assigned", "Tom Tech", "queued")
+    assert (notification["notificationType"], notification["recipientName"], notification["status"]) == ("job_assigned", "Tom Tech", "ready")
     assert eventTypes(clients["admin"], order["orderId"]) == ["created", "assigned", "notification_queued"]
     assert scalar("SELECT template_data ->> 'adminNotes' FROM notification WHERE notification_id = :id", id=notification["notificationId"]) == "Bring a ladder"
 

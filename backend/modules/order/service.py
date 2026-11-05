@@ -131,12 +131,12 @@ def recordEvent(conn, orderId, eventType, actor, requestId, fromStatus=None, toS
         "created_by": actor.email,
     }, conn)
 
-# Queues the job_assigned WhatsApp notification to the order's technician and records it; returns the row, or None
+# Prepares the job_assigned WhatsApp notification to the order's technician and records it; returns the row, or None
 # when the technician has no phone to message.
 def queueAssignedNotification(conn, actor, order, requestId):
     if not order["technician_phone"]:
         return None
-    notification = notificationService.enqueue(
+    notification = notificationService.create(
         conn, order["service_order_id"], order["order_no"], TYPE_JOB_ASSIGNED,
         {"type": RECIPIENT_TECHNICIAN, "name": order["technician_name"], "phone": order["technician_phone"], "userId": order["assigned_technician_id"]},
         None,

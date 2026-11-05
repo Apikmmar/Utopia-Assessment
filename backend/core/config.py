@@ -23,8 +23,6 @@ SUPABASE_URL = "SUPABASE_URL"
 SUPABASE_SERVICE_ROLE_KEY = "SUPABASE_SERVICE_ROLE_KEY"
 STORAGE_BUCKET = "STORAGE_BUCKET"
 STORAGE_VIEW_URL_SECONDS = "STORAGE_VIEW_URL_SECONDS"
-WORKER_POLL_SECONDS = "WORKER_POLL_SECONDS"
-WORKER_EMBEDDED = "WORKER_EMBEDDED"
 
 REQUIRED_APP_SETTINGS = (DATABASE_URL, DATABASE_PASSWORD)
 DEFAULT_STORAGE_BUCKET = "order-files"
@@ -135,14 +133,6 @@ def storageBucket():
 def storageViewUrlSeconds():
     return positiveIntSetting(STORAGE_VIEW_URL_SECONDS, 300)
 
-# Returns how many seconds the worker sleeps when no job is due.
-def workerPollSeconds():
-    return positiveIntSetting(WORKER_POLL_SECONDS, 2)
-
-# Returns whether the API process also runs the worker loop in a background thread.
-def workerEmbedded():
-    return boolSetting(WORKER_EMBEDDED, False)
-
 # Raises one error naming every missing required setting so startup reports them together.
 def requireStartupSettings():
     missing = missingSettings(REQUIRED_APP_SETTINGS)
@@ -170,6 +160,4 @@ __all__ = [
     "storageViewUrlSeconds",
     "supabaseServiceRoleKey",
     "supabaseUrl",
-    "workerEmbedded",
-    "workerPollSeconds",
 ]

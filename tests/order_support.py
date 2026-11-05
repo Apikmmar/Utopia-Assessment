@@ -23,10 +23,10 @@ def insertOrder(engine, adminId, technicianId, status="assigned"):
         }).one()
     return row.service_order_id, row.order_no
 
-# Queues a job_assigned notification to the technician through the notification service and returns its row.
-def queueAssigned(engine, orderId, orderNo, technicianId, technicianName="Tom Tech", technicianPhone="60111111111"):
+# Creates a job_assigned notification to the technician through the notification service and returns its row.
+def createAssigned(engine, orderId, orderNo, technicianId, technicianName="Tom Tech", technicianPhone="60111111111"):
     with engine.begin() as conn:
-        return notificationService.enqueue(
+        return notificationService.create(
             conn, orderId, orderNo, TYPE_JOB_ASSIGNED,
             {"type": RECIPIENT_TECHNICIAN, "name": technicianName, "phone": technicianPhone, "userId": technicianId},
             None,
@@ -35,10 +35,10 @@ def queueAssigned(engine, orderId, orderNo, technicianId, technicianName="Tom Te
             "req-assigned", "admin@example.com",
         )
 
-# Queues a job_done notification to the customer, sent by the technician, and returns its row.
-def queueDone(engine, orderId, orderNo, technicianId, technicianName="Tom Tech"):
+# Creates a job_done notification to the customer, sent by the technician, and returns its row.
+def createDone(engine, orderId, orderNo, technicianId, technicianName="Tom Tech"):
     with engine.begin() as conn:
-        return notificationService.enqueue(
+        return notificationService.create(
             conn, orderId, orderNo, TYPE_JOB_DONE,
             {"type": RECIPIENT_CUSTOMER, "name": CUSTOMER_NAME, "phone": CUSTOMER_PHONE},
             technicianId,

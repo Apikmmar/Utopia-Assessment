@@ -1,8 +1,6 @@
 import pytest
 from modules.notification import service as notificationService
-from tests.order_support import insertOrder, queueAssigned, queueDone
-from worker.handlers import jobHandlers
-from worker.main import Worker
+from tests.order_support import createAssigned, createDone, insertOrder
 
 
 class Rollback(Exception):
@@ -16,43 +14,37 @@ def order(appDb, seedUser):
     orderId, orderNo = insertOrder(appDb, adminId, techId)
     return {"orderId": orderId, "orderNo": orderNo, "techId": techId}
 
-# One worker iteration with the real handlers takes a queued notification to ready with its message and link.
-def testWorkerPreparesQueuedNotification(appDb, order, scalar):
-    row = queueDone(appDb, order["orderId"], order["orderNo"], order["techId"])
-    assert Worker(jobHandlers(), pollSeconds=1, workerId="test").runOnce() is True
-    ready = notificationService.repository.getNotification(row["notification_id"])
-    assert ready["status"] == "ready" and ready["message"].startswith("Hi Siti Customer, Job ORD-")
-    assert ready["deep_link"].startswith("https://wa.me/60123456789?text=")
-    assert scalar("SELECT status FROM job WHERE job_id = :id", id=ready["job_id"]) == "succeeded"
+# Creating a notification prepares its message and WhatsApp link in the same transaction.
+def testCreatePreparesNotification(appDb, order):
+    row = createDone(appDb, order["orderId"], order["orderNo"], order["techId"])
+    assert row["status"] == "ready" and row["message"].startswith("Hi Siti Customer, Job ORD-")
+    assert row["deep_link"].startswith("https://wa.me/60123456789?text=")
+    assert row["ready_at"] is not None
 
-# Delivering again, as a retried job would, leaves a notification that is no longer queued unchanged.
-def testDeliverIsHarmlessWhenRepeated(appDb, order):
-    row = queueAssigned(appDb, order["orderId"], order["orderNo"], order["techId"])
-    notificationService.deliver(row["notification_id"])
-    first = notificationService.repository.getNotification(row["notification_id"])
-    notificationService.deliver(row["notification_id"])
-    assert notificationService.repository.getNotification(row["notification_id"]) == first
+# The technician's job_assigned message carries the customer, address, service, and instructions.
+def testCreatePreparesAssignedMessage(appDb, order):
+    row = createAssigned(appDb, order["orderId"], order["orderNo"], order["techId"])
+    assert row["status"] == "ready"
+    assert "Customer: Siti Customer (60123456789)" in row["message"] and "Instructions: Bring a ladder" in row["message"]
+    assert row["deep_link"].startswith("https://wa.me/60111111111?text=")
 
-# A delivery that keeps failing ends failed with a short reason and no personal data.
-def testFailingDeliveryEndsFailed(appDb, order, execute, scalar, monkeypatch):
-    row = queueDone(appDb, order["orderId"], order["orderNo"], order["techId"])
-    execute("UPDATE job SET max_attempt = 1 WHERE job_id = :id", id=row["job_id"])
+# A message that cannot be prepared leaves the notification failed with a short reason and no personal data,
+# while the surrounding transaction still commits.
+def testFailedPreparationStoresReasonAndCommits(appDb, order, scalar, monkeypatch):
     monkeypatch.setattr(notificationService, "renderMessage", lambda *args: (_ for _ in ()).throw(KeyError("60123456789")))
-    Worker(jobHandlers(), pollSeconds=1, workerId="test").runOnce()
-    assert notificationService.repository.getNotification(row["notification_id"])["status"] == "failed"
+    row = createDone(appDb, order["orderId"], order["orderNo"], order["techId"])
+    assert (row["status"], row["message"], row["deep_link"]) == ("failed", None, None)
     reason = scalar("SELECT error_message FROM notification WHERE notification_id = :id", id=row["notification_id"])
     assert reason == "KeyError"
-    assert scalar("SELECT error_message FROM job WHERE job_id = :id", id=row["job_id"]) == "KeyError"
 
-# A notification queued in a transaction that rolls back leaves neither the notification nor its job.
-def testEnqueueRollsBackWithTheOrderChange(appDb, order, scalar):
+# A notification created in a transaction that rolls back leaves nothing behind.
+def testCreateRollsBackWithTheOrderChange(appDb, order, scalar):
     with pytest.raises(Rollback):
         with appDb.begin() as conn:
-            notificationService.enqueue(
+            notificationService.create(
                 conn, order["orderId"], order["orderNo"], "job_done", {"type": "customer", "name": "Siti", "phone": "60123456789"},
                 order["techId"], {"orderNo": order["orderNo"], "customerName": "Siti", "technicianName": "Tom", "completedAt": "2026-11-04T07:45:00+00:00"},
                 None, "tech@example.com",
             )
             raise Rollback()
     assert scalar("SELECT count(*) FROM notification") == 0
-    assert scalar("SELECT count(*) FROM job") == 0

@@ -11,7 +11,7 @@ ORDER_MIGRATIONS = (
     "0010_service_type.sql", "0011_service_order.sql", "0012_order_attachment.sql",
     "0013_order_completion.sql", "0014_order_event.sql", "0015_notification.sql",
 )
-LATER_MIGRATIONS = ("0016_order_event_postponed.sql",)
+LATER_MIGRATIONS = ("0016_order_event_postponed.sql", "0017_notification_inline_prepare.sql")
 ORDER_TABLES = ("service_type", "service_order", "order_attachment", "order_completion", "order_event", "notification")
 SEEDED_SERVICE_TYPES = ["cleaning", "repair", "gas_refill", "installation", "general_servicing"]
 CONCURRENT_ORDERS = 16

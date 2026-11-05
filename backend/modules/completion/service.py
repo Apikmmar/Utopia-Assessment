@@ -99,7 +99,7 @@ def saveCompletion(actor, orderId, values, verified, requestId):
         if error:
             raise Refused(error)
         completion = repository.getCompletion(orderId, conn)
-        notification = notificationService.enqueue(
+        notification = notificationService.create(
             conn, orderId, order["order_no"], TYPE_JOB_DONE,
             {"type": RECIPIENT_CUSTOMER, "name": order["customer_name"], "phone": order["customer_phone"]},
             actor.userId,
