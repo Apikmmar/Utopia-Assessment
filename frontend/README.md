@@ -10,4 +10,4 @@ React, TypeScript, Vite, Tailwind CSS, TanStack Query, React Hook Form and Zod.
 
 ## Deployment
 
-The app calls the relative path `/api`, so no environment variables are needed. In `vercel.json`, replace `REPLACE-WITH-RENDER-URL` in the first rewrite with the host of the Render backend (for example `utopia-api.onrender.com`, with `https://` kept). The second rewrite serves `index.html` for every other path so nested routes survive a refresh. Set the backend `APP_ALLOWED_ORIGIN` to the Vercel site origin.
+The app calls the relative path `/api`, so no environment variables are needed. In `vercel.json`, the first rewrite points at the Render backend (`https://utopia-assessment.onrender.com`); change it if the backend URL changes. The second rewrite serves `index.html` for every other path so nested routes survive a refresh. Set the backend `APP_ALLOWED_ORIGIN` to the Vercel site origin.

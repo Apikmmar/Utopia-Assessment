@@ -54,7 +54,7 @@ Do not run `script/seed_user.py` or `script/seed_demo_orders.py` against product
 ### Frontend on Vercel
 
 1. Import the repository in Vercel and set Root Directory to `frontend`. `vercel.json` sets the Vite build, the `dist` output, and the rewrites.
-2. If Render gave the service a URL other than `https://utopia-api.onrender.com`, update the `/api` rewrite destination in `frontend/vercel.json`.
+2. The backend runs at `https://utopia-assessment.onrender.com`; if Render ever gives it another URL, update the `/api` rewrite destination in `frontend/vercel.json`.
 3. Deploy, then set `APP_ALLOWED_ORIGIN` on Render to the exact Vercel production URL.
 
 Notes:
