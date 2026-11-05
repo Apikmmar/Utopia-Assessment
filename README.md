@@ -30,7 +30,7 @@ All accounts use the password `P@ssword123`.
 | Bonus: KPI Dashboard | Done (weekly) | Admins and managers see the weekly figures per technician: jobs completed, total amount, and postponements. The page has summary cards, a ranked leaderboard, a bar chart, and week navigation. |
 | Manager review | Done | A review queue for managers. They review Job Done orders, then close them. |
 | Authentication | Done (bonus) | Real login with email and password instead of a role switch. Admins create and edit users and set passwords. |
-| AI Module: Operations Query Window | Not built | The database already has the tables for it (`llm_model`, `llm_invocation`, `token_usage`, `setting`). The design is described under [How AI was integrated](#how-ai-was-integrated). |
+| AI Module: Operations Query Window | Done (bare minimum) | An "AI assistant" page for admins and managers answers the three example questions from the assessment. The backend picks a fixed database query, and Claude Haiku on Amazon Bedrock words the answer from the returned records only. The records are shown beside the answer. See [How AI was integrated](#how-ai-was-integrated). |
 | Optional advanced AI challenges | Not built | |
 
 The status flow is `New -> Assigned -> In Progress -> Job Done -> Reviewed -> Closed`, and the backend enforces it:
@@ -51,6 +51,7 @@ The status flow is `New -> Assigned -> In Progress -> Job Done -> Reviewed -> Cl
 | File storage | Supabase Storage (private bucket, signed URLs) | Preferred stack |
 | Deployment | Vercel (frontend), Render (backend) | Vercel proxies `/api/*` to Render |
 | Login | Email and password, Argon2id hashing, server-side session in an HttpOnly cookie | Basic authentication bonus |
+| AI | Claude Haiku on Amazon Bedrock (Converse API through Boto3) | Called from the FastAPI backend; the model never sees the database |
 | Tests | pytest (unit, API, and PostgreSQL tests), Vitest, Testing Library, Playwright | |
 
 ## Architecture decisions
@@ -83,34 +84,51 @@ Assumptions:
 
 ## How AI was integrated
 
-AI is not built into the running system yet. The AI Operations Query Window is the next module, and this is its design:
-
 ```text
 Manager question
-  -> the AI model picks one allowed query and fills its parameters (technician, period)
-  -> the backend validates the parameters and runs that fixed, read-only query
-  -> the AI model writes the answer only from the rows returned
+  -> the backend matches it to one of three supported questions (rules, no model call)
+  -> the backend runs that question's fixed, read-only SQL query with bound parameters
+  -> Claude Haiku on Amazon Bedrock words a short answer from the returned records only
+  -> the page shows the answer, the period, and the records (with links to each order)
 ```
 
-- The model never writes SQL and never sees the whole database. It can only call a short list of backend functions, the same aggregates the KPI dashboard already uses, and only for managers and admins.
-- Every call is logged in the existing `llm_invocation` and `token_usage` tables, with the model chosen from `llm_model`.
+- **Controlled queries.** The model never writes SQL and never sees the database, the question text, customer details, or IDs. It receives only the question type, the period, and the bounded result (order numbers, service types, completion times, technician names, and counts), at most 16 KB.
+- **The database stays the source of truth.** The counts and job lists on the page come from the backend, not from the model's text. The model is told to use only the given facts, and its answer is shown as plain text.
+- **At most one model call per question,** with a 512-token output limit, a 15-second timeout, and no retries. Unsupported questions, unknown names, and periods with no jobs are answered without calling the model.
+- **Failures are handled.** If Bedrock fails, times out, or returns a cut-off answer, the page still shows the database records with a template sentence and the notice "AI summary unavailable. Showing database results."
+- **Usage is bounded and traceable.** Each call is recorded in `llm_invocation` (status, latency, request ID, who asked) and `token_usage`. The whole app allows 50 model calls per Malaysian day (`AI_DAILY_REQUEST_LIMIT`); after that it answers `429`.
+- **Access.** Only admins and managers can use it, through the same session and origin checks as the rest of the API.
 
 ### What types of AI queries are supported
 
-None are live yet. These are the planned query types, each backed by one fixed query:
+Three question types, matched exactly except for letter case, extra spaces, and a final question mark:
 
-- Jobs one technician completed in a period ("What jobs did technician Ali complete last week?")
-- Ranking by jobs completed in a period ("Which technician completed the most jobs this week?")
-- Count of jobs completed in a period ("How many jobs were completed today?")
+| Question | Answer from the database |
+| --- | --- |
+| `What jobs did [technician] <name> complete last week?` | That technician's completed jobs last week (Monday to Sunday): order number, service type, and time, up to 20 listed with the exact total. |
+| `Which technician completed the most jobs this week?` | The leader and their job count. Every tied leader is listed. |
+| `How many jobs were completed today?` | The exact number of jobs completed today. |
+
+The name can be a full name or a unique first name. If two technicians share the first name, the assistant asks for the full name instead of guessing. Jobs count by their completion time, so reviewed and closed jobs still count.
 
 ### Limitations of the AI implementation
+
+- **Fixed questions only.** Paraphrases, other periods ("yesterday", "this month"), other languages, and follow-up questions are not understood; the assistant explains what it can answer instead.
+- **Rules interpret the question, not the model.** This keeps the queries safe and predictable but means new question types need code.
+- **The model can still word an answer badly.** The records shown under each answer are the authoritative facts.
+- **The daily limit is approximate.** It counts calls already made, so several requests at the same moment can pass it by a few.
+- **Bedrock must be set up.** It needs an AWS account with access to a Claude Haiku model and keys on Render. With `AI_ENABLED` off, the page answers that the assistant is unavailable.
+- **Tests use a stand-in for Bedrock.** The unit, API, and database tests replace only the Bedrock call; a live check against Bedrock has to be run separately with real credentials.
+- **Not built:** the optional advanced challenges (workflow supervisor, document extraction, operational insight).
+
+## Limitations of the AI implementation
 
 - The module is not implemented, so the portal has no AI assistant today.
 - As designed, it would answer only questions that map to one of the allowed queries. Anything else gets a clear "I can't answer that yet" instead of a guess.
 
 ## Limitations
 
-- No AI module yet (see above).
+- The AI assistant answers only three fixed question types (see above).
 - WhatsApp uses deep links. The system cannot confirm that a message was delivered, and someone has to tap the link to send it.
 - Managers and accounts are not notified when a job is done. They see it in the review queue.
 - KPI covers weekly data only. There is no trend, month view, drill-down, or technician self-view.
@@ -196,6 +214,7 @@ The backend runs on Render as one web service, defined in `render.yaml`. The fro
    - `DATABASE_PASSWORD`: the database password.
    - `APP_ALLOWED_ORIGIN`: the Vercel production URL with no trailing slash.
    - `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`: needed for order file uploads.
+   - For the AI assistant: `AI_ENABLED=true`, `AWS_REGION` (a region where your account has Claude Haiku), `AI_BEDROCK_MODEL_ID` (the model or inference profile ID from the Bedrock console), `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` for an IAM user allowed `bedrock:InvokeModel` on that model. Optional: `AI_DAILY_REQUEST_LIMIT` (default 50). Leave `AI_ENABLED` unset to run without AI.
 3. Deploy. Render checks `/info` for liveness. Open `/health` to confirm the database connection.
 
 Apply migrations from your machine before the first deploy and whenever `db/migrations/` changes. Point `backend/.env` at the production database, then run:

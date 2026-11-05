@@ -24,7 +24,15 @@ SUPABASE_SERVICE_ROLE_KEY = "SUPABASE_SERVICE_ROLE_KEY"
 STORAGE_BUCKET = "STORAGE_BUCKET"
 STORAGE_VIEW_URL_SECONDS = "STORAGE_VIEW_URL_SECONDS"
 
+AI_ENABLED = "AI_ENABLED"
+AWS_REGION = "AWS_REGION"
+AI_BEDROCK_MODEL_ID = "AI_BEDROCK_MODEL_ID"
+AI_DAILY_REQUEST_LIMIT = "AI_DAILY_REQUEST_LIMIT"
+
 REQUIRED_APP_SETTINGS = (DATABASE_URL, DATABASE_PASSWORD)
+REQUIRED_AI_SETTINGS = (AWS_REGION, AI_BEDROCK_MODEL_ID)
+DEFAULT_AI_DAILY_REQUEST_LIMIT = 50
+AI_MODEL_ID_MAX_LENGTH = 100
 DEFAULT_STORAGE_BUCKET = "order-files"
 DEFAULT_ALLOWED_ORIGIN = "http://localhost:5173"
 
@@ -133,20 +141,46 @@ def storageBucket():
 def storageViewUrlSeconds():
     return positiveIntSetting(STORAGE_VIEW_URL_SECONDS, 300)
 
-# Raises one error naming every missing required setting so startup reports them together.
+# Returns whether the AI query feature is switched on; it is off unless configured.
+def aiEnabled():
+    return boolSetting(AI_ENABLED, False)
+
+# Returns the AWS region that serves Amazon Bedrock, or None when it is not configured.
+def awsRegion():
+    return setting(AWS_REGION)
+
+# Returns the Bedrock model or inference profile id, or None when it is not configured.
+def aiBedrockModelId():
+    return setting(AI_BEDROCK_MODEL_ID)
+
+# Returns how many AI summaries the whole application may request per business day.
+def aiDailyRequestLimit():
+    return positiveIntSetting(AI_DAILY_REQUEST_LIMIT, DEFAULT_AI_DAILY_REQUEST_LIMIT)
+
+# Raises one error naming every missing required setting so startup reports them together. The AI settings are
+# required only when the feature is on, so the rest of the app starts without them.
 def requireStartupSettings():
-    missing = missingSettings(REQUIRED_APP_SETTINGS)
+    required = REQUIRED_APP_SETTINGS + (REQUIRED_AI_SETTINGS if aiEnabled() else ())
+    missing = missingSettings(required)
     if missing:
         raise RuntimeError("Missing required configuration: " + ", ".join(missing))
+    if aiEnabled():
+        aiDailyRequestLimit()
+        if len(aiBedrockModelId()) > AI_MODEL_ID_MAX_LENGTH:
+            raise RuntimeError(f"Configuration {AI_BEDROCK_MODEL_ID} must be at most {AI_MODEL_ID_MAX_LENGTH} characters.")
 
 
 __all__ = [
+    "aiBedrockModelId",
+    "aiDailyRequestLimit",
+    "aiEnabled",
     "allowedOrigin",
     "authArgon2Iterations",
     "authArgon2MemoryKib",
     "authCookieName",
     "authCookieSecure",
     "authSessionHours",
+    "awsRegion",
     "boolSetting",
     "databasePassword",
     "databaseUrl",

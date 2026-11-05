@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from "react-router";
+import { AiQueryPage } from "@/features/ai/pages/ai-query-page";
 import { ProtectedRoute } from "@/features/auth/components/protected-route";
 import { HomePage } from "@/features/auth/pages/home-page";
 import { LoginPage } from "@/features/auth/pages/login-page";
@@ -37,6 +38,7 @@ export function AppRoutes() {
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/orders/:orderId" element={<OrderDetailPage />} />
         <Route path="/kpi" element={<KpiDashboardPage />} />
+        <Route path="/ai" element={<AiQueryPage />} />
       </Route>
       <Route element={<ProtectedRoute roles={["manager"]} />}>
         <Route path="/review" element={<ReviewQueuePage />} />

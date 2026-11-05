@@ -24,3 +24,13 @@ services:
         sync: false
       - key: STORAGE_BUCKET
         value: order-files
+      - key: AI_ENABLED
+        sync: false
+      - key: AWS_REGION
+        sync: false
+      - key: AI_BEDROCK_MODEL_ID
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false

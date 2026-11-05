@@ -12,6 +12,8 @@ from core.logger import configureLogging, getLogger
 from core.middleware import OriginCheckMiddleware, RequestIdMiddleware
 from core.request_context import REQUEST_ID_HEADER
 from core.storage import closeStorage
+from modules.ai.provider import closeProvider
+from modules.ai.router import router as aiRouter
 from modules.auth.router import router as authRouter
 from modules.attachment.router import router as attachmentRouter
 from modules.completion.router import router as completionRouter
@@ -71,10 +73,10 @@ def assertRoutesProtected(routers, publicRoutes=PUBLIC_ROUTES):
 
 # Returns every router to register; add new feature routers here.
 def featureRouters():
-    return [systemRouter, authRouter, userRouter, serviceTypeRouter, notificationRouter, orderRouter, attachmentRouter, completionRouter, kpiRouter]
+    return [systemRouter, authRouter, userRouter, serviceTypeRouter, notificationRouter, orderRouter, attachmentRouter, completionRouter, kpiRouter, aiRouter]
 
-# Validates required settings at server start, warms the dummy password hash, and closes the storage
-# client at shutdown.
+# Validates required settings at server start, warms the dummy password hash, and closes the storage and AI
+# provider clients at shutdown.
 @asynccontextmanager
 async def lifespan(app):
     config.requireStartupSettings()
@@ -83,6 +85,7 @@ async def lifespan(app):
         yield
     finally:
         closeStorage()
+        closeProvider()
 
 # Builds the FastAPI application; run with uvicorn api.main:createApp --factory --app-dir backend.
 def createApp():

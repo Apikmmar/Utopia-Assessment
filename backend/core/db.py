@@ -24,6 +24,8 @@ tokenUsageTable = Table(
     Column("input_token", Integer, nullable=False), Column("output_token", Integer, nullable=False), Column("total_token", Integer, nullable=False),
     Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
     Column("created_by", String(100), nullable=False, server_default=text("'System'")),
+    Column("updated_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")),
+    Column("updated_by", String(100), nullable=False, server_default=text("'System'")),
 )
 
 llmModelTable = Table(
